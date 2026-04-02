@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Exam - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .exam-edit-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #1a1f2e;
+        border-radius: 12px;
+        border: 1px solid #2d3748;
+      }
+
+      .form-section {
+        margin-bottom: 2rem;
+      }
+
+      .form-section h3 {
+        color: #00d9ff;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        color: #a0a9b8;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 6px;
+        color: #a0a9b8;
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #00d9ff;
+        box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .question-card {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-card.active {
+        border-color: #00d9ff;
+        box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+      }
+
+      .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .question-header h4 {
+        color: #00d9ff;
+        margin: 0;
+      }
+
+      .btn-delete {
+        background: #c84c5a;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-delete:hover {
+        background: #d94860;
+      }
+
+      .options-group {
+        background: #1a1f2e;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+      }
+
+      .option-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        align-items: center;
+      }
+
+      .option-input input[type="text"] {
+        flex: 1;
+      }
+
+      .option-input input[type="radio"] {
+        width: auto;
+        cursor: pointer;
+      }
+
+      .btn-add-option {
+        background: rgba(0, 217, 255, 0.2);
+        color: #00d9ff;
+        border: 1px solid #00d9ff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-add-option:hover {
+        background: rgba(0, 217, 255, 0.3);
+      }
+
+      .image-upload-group {
+        margin-top: 1rem;
+      }
+
+      .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 1rem;
+        border-radius: 6px;
+        display: none;
+      }
+
+      .image-preview.show {
+        display: block;
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #00d9ff;
+        border: 1px solid #00d9ff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(0, 217, 255, 0.1);
+      }
+
+      .btn-add-question {
+        background: rgba(0, 217, 255, 0.2);
+        color: #00d9ff;
+        border: 1px solid #00d9ff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-add-question:hover {
+        background: rgba(0, 217, 255, 0.3);
+      }
+
+      .success-message {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      .error-message {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .back-link {
+        color: #00d9ff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .two-column {
+          grid-template-columns: 1fr;
+        }
+
+        .exam-edit-container {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="/manage-exams.html" class="signin-link">Manage Exams</a>
+          </li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="exam-edit-container">
+      <a href="/manage-exams.html" class="back-link">← Back to Manage Exams</a>
+
+      <h1 style="color: #00d9ff; margin-bottom: 1rem">Edit Exam</h1>
+
+      <div class="success-message" id="successMessage"></div>
+      <div class="error-message" id="errorMessage"></div>
+
+      <form id="examForm">
+        <!-- Exam Details Section -->
+        <div class="form-section">
+          <h3>Exam Details</h3>
+
+          <div class="form-group">
+            <label for="examName">Exam Name *</label>
+            <input
+              type="text"
+              id="examName"
+              name="examName"
+              required
+              placeholder="e.g., Calculus Mid-term"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="examDescription">Exam Description</label>
+            <textarea
+              id="examDescription"
+              name="examDescription"
+              placeholder="Describe the exam..."
+            ></textarea>
+          </div>
+
+          <div class="two-column">
+            <div class="form-group">
+              <label for="duration">Duration (minutes) *</label>
+              <input
+                type="number"
+                id="duration"
+                name="duration"
+                required
+                min="1"
+                placeholder="e.g., 60"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="totalMarks">Total Marks *</label>
+              <input
+                type="number"
+                id="totalMarks"
+                name="totalMarks"
+                required
+                min="1"
+                placeholder="e.g., 100"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="form-section">
+          <h3>Questions</h3>
+          <button
+            type="button"
+            class="btn-add-question"
+            onclick="addQuestion()"
+          >
+            + Add Question
+          </button>
+
+          <div id="questionsContainer"></div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="btn-container">
+          <button
+            type="button"
+            class="btn-secondary"
+            onclick="window.location.href = '/manage-exams.html'"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let examId = null;
+      let questionsData = [];
+
+      // Check authentication
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "faculty") {
+            window.location.href = "/dashboard";
+          }
+
+          // Get exam ID from URL
+          const params = new URLSearchParams(window.location.search);
+          examId = params.get("id");
+
+          if (!examId) {
+            showError("Exam ID not found");
+            setTimeout(
+              () => (window.location.href = "/manage-exams.html"),
+              2000,
+            );
+            return;
+          }
+
+          loadExam();
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadExam() {
+        try {
+          const response = await fetch(`/api/exams/${examId}`);
+          if (!response.ok) {
+            showError("Failed to load exam");
+            return;
+          }
+
+          const data = await response.json();
+          const exam = data.exam;
+
+          // Populate form
+          document.getElementById("examName").value = exam.examName;
+          document.getElementById("examDescription").value =
+            exam.examDescription;
+          document.getElementById("duration").value = exam.duration;
+          document.getElementById("totalMarks").value = exam.totalMarks;
+
+          // Load questions
+          questionsData = exam.questions.map((q) => ({
+            id: q.questionId,
+            text: q.questionText,
+            type: q.questionType,
+            marks: q.marks,
+            options: q.options || [],
+            correctAnswer: q.options ? q.options.indexOf(q.correctAnswer) : 0,
+            imageUrl: q.imageUrl || "",
+          }));
+
+          renderQuestions();
+        } catch (error) {
+          console.error("Error loading exam:", error);
+          showError("Error loading exam");
+        }
+      }
+
+      function addQuestion() {
+        const questionId = Date.now().toString();
+        const question = {
+          id: questionId,
+          text: "",
+          type: "mcq",
+          marks: 1,
+          options: ["", ""],
+          correctAnswer: 0,
+          imageUrl: "",
+        };
+
+        questionsData.push(question);
+        renderQuestions();
+      }
+
+      function removeQuestion(questionId) {
+        questionsData = questionsData.filter((q) => q.id !== questionId);
+        renderQuestions();
+      }
+
+      function addOption(questionId) {
+        const question = questionsData.find((q) => q.id === questionId);
+        if (question) {
+          question.options.push("");
+          renderQuestions();
+        }
+      }
+
+      function removeOption(questionId, optionIndex) {
+        const question = questionsData.find((q) => q.id === questionId);
+        if (question && question.options.length > 1) {
+          question.options.splice(optionIndex, 1);
+          if (question.correctAnswer >= question.options.length) {
+            question.correctAnswer = 0;
+          }
+          renderQuestions();
+        }
+      }
+
+      function updateQuestion(questionId, field, value) {
+        const question = questionsData.find((q) => q.id === questionId);
+        if (question) {
+          question[field] = value;
+          renderQuestions();
+        }
+      }
+
+      function updateOption(questionId, optionIndex, value) {
+        const question = questionsData.find((q) => q.id === questionId);
+        if (question) {
+          question.options[optionIndex] = value;
+        }
+      }
+
+      function updateCorrectAnswer(questionId, optionIndex) {
+        const question = questionsData.find((q) => q.id === questionId);
+        if (question) {
+          question.correctAnswer = optionIndex;
+        }
+      }
+
+      function handleImageUpload(questionId, file) {
+        if (file && file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const question = questionsData.find((q) => q.id === questionId);
+            if (question) {
+              question.imageUrl = e.target.result;
+              renderQuestions();
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function renderQuestions() {
+        const container = document.getElementById("questionsContainer");
+        container.innerHTML = questionsData
+          .map(
+            (question, index) => `
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Question ${index + 1}</h4>
+                        <button type="button" class="btn-delete" onclick="removeQuestion('${question.id}')">Delete</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qText-${question.id}">Question Text *</label>
+                        <textarea id="qText-${question.id}" placeholder="Enter your question..." 
+                            onchange="updateQuestion('${question.id}', 'text', this.value)">${question.text}</textarea>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="form-group">
+                            <label for="qType-${question.id}">Question Type</label>
+                            <select id="qType-${question.id}" onchange="updateQuestion('${question.id}', 'type', this.value)">
+                                <option value="mcq" ${question.type === "mcq" ? "selected" : ""}>Multiple Choice</option>
+                                <option value="shortAnswer" ${question.type === "shortAnswer" ? "selected" : ""}>Short Answer</option>
+                                <option value="essay" ${question.type === "essay" ? "selected" : ""}>Essay</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="qMarks-${question.id}">Marks *</label>
+                            <input type="number" id="qMarks-${question.id}" min="1" value="${question.marks}"
+                                onchange="updateQuestion('${question.id}', 'marks', parseInt(this.value))" />
+                        </div>
+                    </div>
+
+                    <div class="image-upload-group">
+                        <label for="qImage-${question.id}">Upload Image (Optional)</label>
+                        <input type="file" id="qImage-${question.id}" accept="image/*" 
+                            onchange="handleImageUpload('${question.id}', this.files[0])" />
+                        ${question.imageUrl ? `<img class="image-preview show" src="${question.imageUrl}" alt="Question image" />` : ""}
+                    </div>
+
+                    ${
+                      question.type === "mcq"
+                        ? `
+                        <div class="options-group">
+                            <label>Options *</label>
+                            ${question.options
+                              .map(
+                                (option, optIndex) => `
+                                <div class="option-input">
+                                    <input type="radio" name="correct-${question.id}" value="${optIndex}"
+                                        ${question.correctAnswer === optIndex ? "checked" : ""}
+                                        onchange="updateCorrectAnswer('${question.id}', ${optIndex})" />
+                                    <input type="text" placeholder="Option ${optIndex + 1}" value="${option}"
+                                        onchange="updateOption('${question.id}', ${optIndex}, this.value)" />
+                                    <button type="button" class="btn-delete" onclick="removeOption('${question.id}', ${optIndex})"
+                                        ${question.options.length === 1 ? "disabled" : ""}>Remove</button>
+                                </div>
+                            `,
+                              )
+                              .join("")}
+                            <button type="button" class="btn-add-option" onclick="addOption('${question.id}')">+ Add Option</button>
+                        </div>
+                    `
+                        : ""
+                    }
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      // Form submission
+      document
+        .getElementById("examForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const examName = document.getElementById("examName").value;
+          const examDescription =
+            document.getElementById("examDescription").value;
+          const duration = parseInt(document.getElementById("duration").value);
+          const totalMarks = parseInt(
+            document.getElementById("totalMarks").value,
+          );
+
+          if (!examName || !duration || !totalMarks) {
+            showError("Please fill all required fields");
+            return;
+          }
+
+          if (questionsData.length === 0) {
+            showError("Please add at least one question");
+            return;
+          }
+
+          // Validate questions
+          for (let q of questionsData) {
+            if (!q.text) {
+              showError("All questions must have text");
+              return;
+            }
+            if (q.type === "mcq" && q.options.some((opt) => !opt.trim())) {
+              showError("All options must be filled for MCQ questions");
+              return;
+            }
+          }
+
+          const questions = questionsData.map((q) => ({
+            questionId: q.id,
+            questionText: q.text,
+            questionType: q.type,
+            marks: q.marks,
+            options: q.type === "mcq" ? q.options : [],
+            correctAnswer: q.type === "mcq" ? q.options[q.correctAnswer] : "",
+            imageUrl: q.imageUrl,
+          }));
+
+          try {
+            const response = await fetch(`/api/exams/${examId}`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                examName,
+                examDescription,
+                duration,
+                totalMarks,
+                questions,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              showError(data.message || "Failed to update exam");
+              return;
+            }
+
+            showSuccess("Exam updated successfully!");
+            setTimeout(() => {
+              window.location.href = "/manage-exams.html";
+            }, 1500);
+          } catch (error) {
+            console.error("Error:", error);
+            showError("An error occurred while updating the exam");
+          }
+        });
+
+      function showError(message) {
+        const errorEl = document.getElementById("errorMessage");
+        errorEl.textContent = message;
+        errorEl.classList.add("show");
+        setTimeout(() => errorEl.classList.remove("show"), 5000);
+      }
+
+      function showSuccess(message) {
+        const successEl = document.getElementById("successMessage");
+        successEl.textContent = message;
+        successEl.classList.add("show");
+      }
+
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        }).then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      // Initialize
+      checkAuth();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Students - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .manage-students-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+
+      .page-header {
+        color: #00d9ff;
+        margin-bottom: 2rem;
+      }
+
+      .page-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+      }
+
+      .search-section {
+        margin-bottom: 2rem;
+      }
+
+      .search-box {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .search-box input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 6px;
+        color: #e1e8ef;
+        font-size: 1rem;
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: #00d9ff;
+        box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+      }
+
+      .search-box button {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .search-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .students-table-container {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .students-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .students-table thead {
+        background: #0d0f14;
+      }
+
+      .students-table th {
+        padding: 1rem;
+        text-align: left;
+        color: #00d9ff;
+        font-weight: 600;
+        border-bottom: 1px solid #2d3748;
+      }
+
+      .students-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #2d3748;
+        color: #e1e8ef;
+      }
+
+      .students-table tbody tr:hover {
+        background: rgba(0, 217, 255, 0.05);
+      }
+
+      .students-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .student-name {
+        color: #00d9ff;
+        font-weight: 600;
+      }
+
+      .student-email {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+      }
+
+      .status-active {
+        display: inline-block;
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .status-inactive {
+        display: inline-block;
+        background: rgba(158, 158, 158, 0.2);
+        color: #b0bec5;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .btn-add-to-exam {
+        background: rgba(156, 39, 176, 0.2);
+        color: #9c27b0;
+        border: 1px solid #9c27b0;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-add-to-exam:hover {
+        background: rgba(156, 39, 176, 0.3);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #7a8289;
+      }
+
+      .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .success-message {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      .error-message {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: #1a1f2e;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #2d3748;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        color: #00d9ff;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #2d3748;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: #a0a9b8;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .close-btn:hover {
+        color: #00d9ff;
+      }
+
+      .exam-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: #0d0f14;
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+      }
+
+      .exam-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      .exam-checkbox-label {
+        flex: 1;
+      }
+
+      .exam-checkbox-label .exam-name {
+        color: #e1e8ef;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .exam-checkbox-label .exam-info {
+        color: #a0a9b8;
+        font-size: 0.85rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .back-link {
+        color: #00d9ff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .students-table {
+          font-size: 0.9rem;
+        }
+
+        .students-table th,
+        .students-table td {
+          padding: 0.75rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/dashboard" class="signin-link">Dashboard</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="manage-students-container">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+      <div class="page-header">
+        <h1>Manage Students</h1>
+        <p>View all students and add them to exams</p>
+      </div>
+
+      <div class="success-message" id="successMessage"></div>
+      <div class="error-message" id="errorMessage"></div>
+
+      <div class="search-section">
+        <div class="search-box">
+          <input
+            type="email"
+            id="searchEmail"
+            placeholder="Search by email address..."
+            onkeyup="searchStudents()"
+          />
+          <button onclick="searchStudents()">Search</button>
+        </div>
+      </div>
+
+      <div class="students-table-container">
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody">
+            <tr>
+              <td
+                colspan="5"
+                style="text-align: center; padding: 2rem; color: #7a8289"
+              >
+                Loading students...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Add to Exam Modal -->
+    <div class="modal" id="addToExamModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add to Exam</h2>
+          <button class="close-btn" onclick="closeAddToExamModal()">×</button>
+        </div>
+        <p style="color: #a0a9b8; margin-bottom: 1rem">
+          Select the exams you want to add this student to:
+        </p>
+        <div id="examsChecklistContainer"></div>
+        <button class="btn-primary" onclick="confirmAddToExams()">
+          Add to Selected Exams
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let allStudents = [];
+      let selectedStudentId = null;
+      let selectedExamIds = [];
+
+      // Check authentication
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "faculty") {
+            window.location.href = "/dashboard";
+          }
+
+          loadStudents();
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadStudents() {
+        try {
+          const response = await fetch("/api/students/all");
+          if (!response.ok) {
+            showError("Failed to load students");
+            return;
+          }
+
+          const data = await response.json();
+          allStudents = data.students;
+          renderStudents(allStudents);
+        } catch (error) {
+          console.error("Error loading students:", error);
+          showError("Error loading students");
+        }
+      }
+
+      async function searchStudents() {
+        const email = document.getElementById("searchEmail").value.trim();
+
+        if (!email) {
+          renderStudents(allStudents);
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `/api/students/search?email=${encodeURIComponent(email)}`,
+          );
+          if (!response.ok) {
+            showError("Search failed");
+            return;
+          }
+
+          const data = await response.json();
+          renderStudents(data.students);
+        } catch (error) {
+          console.error("Error searching students:", error);
+          showError("Error searching students");
+        }
+      }
+
+      function renderStudents(students) {
+        const tbody = document.getElementById("studentsTableBody");
+
+        if (students.length === 0) {
+          tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">👤</div>
+                                <p>No students found</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+          return;
+        }
+
+        tbody.innerHTML = students
+          .map((student) => {
+            const createdDate = new Date(
+              student.createdAt,
+            ).toLocaleDateString();
+            return `
+                    <tr>
+                        <td>
+                            <div class="student-name">${student.name}</div>
+                        </td>
+                        <td>
+                            <div class="student-email">${student.email}</div>
+                        </td>
+                        <td>
+                            <span class="status-${student.isActive ? "active" : "inactive"}">
+                                ${student.isActive ? "🟢 Active" : "⚫ Offline"}
+                            </span>
+                        </td>
+                        <td style="color: #a0a9b8; font-size: 0.9rem;">${createdDate}</td>
+                        <td>
+                            <button class="btn-add-to-exam" onclick="openAddToExamModal('${student.id}')">
+                                ➕ Add to Exam
+                            </button>
+                        </td>
+                    </tr>
+                `;
+          })
+          .join("");
+      }
+
+      async function openAddToExamModal(studentId) {
+        selectedStudentId = studentId;
+        selectedExamIds = [];
+
+        try {
+          const response = await fetch("/api/exams/faculty");
+          if (!response.ok) {
+            showError("Failed to load exams");
+            return;
+          }
+
+          const data = await response.json();
+          const exams = data.exams;
+
+          if (exams.length === 0) {
+            showError("No exams available. Create an exam first.");
+            return;
+          }
+
+          const container = document.getElementById("examsChecklistContainer");
+          container.innerHTML = exams
+            .map(
+              (exam) => `
+                    <label class="exam-checkbox">
+                        <input 
+                            type="checkbox" 
+                            value="${exam.examId}"
+                            onchange="updateSelectedExams()"
+                        />
+                        <div class="exam-checkbox-label">
+                            <div class="exam-name">${exam.examName}</div>
+                            <div class="exam-info">
+                                ${exam.duration} min • ${exam.questions.length} questions • ${exam.students.length} students
+                            </div>
+                        </div>
+                    </label>
+                `,
+            )
+            .join("");
+
+          document.getElementById("addToExamModal").classList.add("show");
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred");
+        }
+      }
+
+      function updateSelectedExams() {
+        const checkboxes = document.querySelectorAll(
+          '#examsChecklistContainer input[type="checkbox"]:checked',
+        );
+        selectedExamIds = Array.from(checkboxes).map((cb) => cb.value);
+      }
+
+      async function confirmAddToExams() {
+        if (selectedExamIds.length === 0) {
+          showError("Please select at least one exam");
+          return;
+        }
+
+        try {
+          // Add student to each selected exam
+          for (const examId of selectedExamIds) {
+            const response = await fetch(`/api/exams/${examId}/add-students`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                studentIds: [selectedStudentId],
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`Failed to add student to exam ${examId}`);
+            }
+          }
+
+          showSuccess("Student added to selected exams successfully!");
+          closeAddToExamModal();
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred while adding student to exams");
+        }
+      }
+
+      function closeAddToExamModal() {
+        document.getElementById("addToExamModal").classList.remove("show");
+        selectedStudentId = null;
+        selectedExamIds = [];
+      }
+
+      function showError(message) {
+        const errorEl = document.getElementById("errorMessage");
+        errorEl.textContent = message;
+        errorEl.classList.add("show");
+        setTimeout(() => errorEl.classList.remove("show"), 5000);
+      }
+
+      function showSuccess(message) {
+        const successEl = document.getElementById("successMessage");
+        successEl.textContent = message;
+        successEl.classList.add("show");
+        setTimeout(() => successEl.classList.remove("show"), 5000);
+      }
+
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        }).then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener("click", function (event) {
+        const modal = document.getElementById("addToExamModal");
+        if (event.target === modal) {
+          modal.classList.remove("show");
+        }
+      });
+
+      // Initialize
+      checkAuth();
+    </script>
+  </body>
+</html>
