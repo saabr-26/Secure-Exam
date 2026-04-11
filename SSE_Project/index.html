@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureExam - A New Way to Assess</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+  <style>
+    .hidden {
+      display: none !important;
+    }
+
+    .visible {
+      display: block !important;
+    }
+
+    .auth-container-full {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .auth-container-full>div {
+      width: 100%;
+    }
+
+    .section {
+      transition: opacity 0.3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo-section">
+        <svg class="logo-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: #00d9ff; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #00ffff; stop-opacity: 1" />
+            </linearGradient>
+          </defs>
+          <path d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z" fill="url(#logoGradient)" stroke="white"
+            stroke-width="1" />
+          <path d="M 15 20 L 18 23 L 26 15" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        <span class="logo-text">SecureExam</span>
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="#" onclick="
+                scrollToSection('hero');
+                return false;
+              ">Home</a>
+        </li>
+        <li>
+          <a href="#" onclick="
+                scrollToSection('aboutus');
+                return false;
+              ">About Us</a>
+        </li>
+        <li>
+          <a href="#" onclick="
+                scrollToSection('contact');
+                return false;
+              ">Contact</a>
+        </li>
+        <li id="navLogin" style="display: block">
+          <a href="#" onclick="
+                showSection('login');
+                return false;
+              " class="signin-link">Login</a>
+        </li>
+        <li id="navLogout" style="display: none">
+          <a href="#" onclick="
+                logout();
+                return false;
+              " class="signin-link">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- LANDING PAGE SECTION -->
+  <section id="landing" class="section">
+    <!-- HERO SECTION -->
+    <div id="hero" class="hero">
+      <div class="hero-container">
+        <!-- Left Side - Illustration -->
+        <div class="hero-left">
+          <svg class="hero-illustration" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
+            <g class="notebook">
+              <rect x="60" y="50" width="140" height="170" rx="8" fill="#1a1f2e" stroke="#2d3748" stroke-width="2" />
+              <rect x="75" y="65" width="20" height="20" fill="#00d9ff" />
+              <rect x="100" y="65" width="20" height="20" fill="#ffd700" />
+              <rect x="125" y="65" width="20" height="20" fill="#00ffff" />
+              <line x1="75" y1="95" x2="145" y2="95" stroke="#2d3748" stroke-width="1" />
+              <line x1="75" y1="105" x2="145" y2="105" stroke="#2d3748" stroke-width="1" />
+              <line x1="75" y1="115" x2="145" y2="115" stroke="#2d3748" stroke-width="1" />
+              <line x1="75" y1="125" x2="145" y2="125" stroke="#2d3748" stroke-width="1" />
+              <line x1="75" y1="135" x2="145" y2="135" stroke="#2d3748" stroke-width="1" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Right Side - Content -->
+        <div class="hero-right">
+          <h1 class="hero-title">A New Way to Assess</h1>
+          <p class="hero-description">
+            SecureExam is the best platform to help you conduct secure online
+            examinations and ensure academic integrity with advanced
+            proctoring technology.
+          </p>
+          <div class="dropdown-container">
+            <button class="btn btn-primary dropdown-toggle">
+              Create Account
+            </button>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item" onclick="
+                    registerType('student');
+                    return false;
+                  ">
+                <svg class="dropdown-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="8" r="4" fill="currentColor" />
+                  <path d="M 12 14 Q 8 14 6 16 L 6 20 Q 6 22 8 22 L 16 22 Q 18 22 18 20 L 18 16 Q 16 14 12 14"
+                    fill="currentColor" />
+                </svg>
+                <span>Student</span>
+              </a>
+              <a href="#" class="dropdown-item" onclick="
+                    registerType('faculty');
+                    return false;
+                  ">
+                <svg class="dropdown-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M 12 2 L 3 6 L 3 11 Q 3 18 12 22 Q 21 18 21 11 L 21 6 Z" fill="none" stroke="currentColor"
+                    stroke-width="2" />
+                  <path d="M 9 13 L 11 15 L 15 11" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>Faculty</span>
+              </a>
+            </div>
+          </div>
+          <p class="hero-footer">
+            Already have an account?
+            <a href="#" onclick="
+                  showSection('login');
+                  return false;
+                " style="color: #00d9ff; font-weight: 600">Login here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT US SECTION -->
+    <div id="aboutus" class="about-section">
+      <div class="about-container">
+        <div class="about-content">
+          <h1>About SecureExam</h1>
+          <p>
+            SecureExam is a cutting-edge platform designed to revolutionize
+            the way educational institutions conduct online examinations. With
+            advanced proctoring technology and comprehensive security
+            features, we ensure academic integrity while providing a seamless
+            testing experience.
+          </p>
+
+          <div class="about-features">
+            <div class="feature-card">
+              <h3>Secure Testing</h3>
+              <p>
+                Advanced proctoring technology to prevent cheating and ensure
+                fair assessment.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Easy Management</h3>
+              <p>
+                Simplified exam creation, distribution, and result management
+                for educators.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>Real-time Analytics</h3>
+              <p>
+                Comprehensive performance analytics and detailed reports for
+                better insights.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h3>24/7 Support</h3>
+              <p>
+                Dedicated support team ready to assist you anytime during your
+                exams.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT US SECTION -->
+    <div id="contact" class="contact-section">
+      <div class="contact-container">
+        <div class="contact-content">
+          <h1>Contact Us</h1>
+          <p>
+            Have questions? We'd love to hear from you. Get in touch with our
+            team.
+          </p>
+
+          <form id="contactForm" class="contact-form">
+            <div class="form-group">
+              <label for="contactName">Full Name *</label>
+              <input type="text" id="contactName" name="contactName" placeholder="Your name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="contactEmail">Email Address *</label>
+              <input type="email" id="contactEmail" name="contactEmail" placeholder="Your email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="contactSubject">Subject *</label>
+              <input type="text" id="contactSubject" name="contactSubject" placeholder="How can we help?" required />
+            </div>
+
+            <div class="form-group">
+              <label for="contactMessage">Message *</label>
+              <textarea id="contactMessage" name="contactMessage" placeholder="Your message" rows="5"
+                required></textarea>
+            </div>
+
+            <div id="contactSuccessMessage" class="success-message"></div>
+            <button type="submit" class="auth-btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTRATION SECTION -->
+  <section id="registration" class="section auth-section hidden">
+    <div class="auth-container auth-container-full">
+      <div style="max-width: 420px">
+        <h1>Create Your SecureExam Account</h1>
+        <p class="auth-subtitle">Join our secure exam platform</p>
+
+        <form id="registerForm" class="auth-form">
+          <div class="form-group">
+            <label for="userType">User Type *</label>
+            <select id="userType" name="userType" required>
+              <option value="">-- Select User Type --</option>
+              <option value="student">Student</option>
+              <option value="faculty">Faculty</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" name="password" placeholder="Create a strong password" required />
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password *</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password"
+              required />
+          </div>
+
+          <!-- Face Registration -->
+          <div class="form-group">
+            <label>Face Registration (Required for Security) *</label>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <video id="registerVideo" width="300" height="225" autoplay muted
+                style="border: 2px solid #e2e8f0; border-radius: 8px; display: none;"></video>
+              <button type="button" id="startRegisterWebcam" class="auth-btn" style="background-color: #64748b;">Start
+                Webcam to Register Face</button>
+            </div>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 8px; text-align: center;">Required: Your face is
+              geometrically encrypted for secure login.</p>
+          </div>
+
+          <div id="registerErrorMessage" class="error-message"></div>
+          <div id="registerSuccessMessage" class="success-message"></div>
+
+          <button type="submit" class="auth-btn">Register</button>
+        </form>
+
+        <p class="auth-footer">
+          Already have an account?
+          <a href="#" onclick="
+                showSection('login');
+                return false;
+              ">Login here</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN SECTION -->
+  <section id="login" class="section auth-section hidden">
+    <div class="auth-container auth-container-full">
+      <div style="max-width: 420px">
+        <h1>Login to SecureExam</h1>
+        <p class="auth-subtitle">Access your exam platform securely</p>
+
+        <form id="loginForm" class="auth-form">
+          <div class="form-group">
+            <label for="loginUserType">Select User Type *</label>
+            <select id="loginUserType" name="loginUserType" required>
+              <option value="">-- Choose User Type --</option>
+              <option value="student">Student</option>
+              <option value="faculty">Faculty</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="loginEmail">Email Address *</label>
+            <input type="email" id="loginEmail" name="loginEmail" placeholder="Enter your email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password *</label>
+            <input type="password" id="loginPassword" name="loginPassword" placeholder="Enter your password" required />
+          </div>
+
+          <!-- Face Verification -->
+          <div class="form-group">
+            <label>Face Verification (Required for Security) *</label>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <video id="loginVideo" width="300" height="225" autoplay muted
+                style="border: 2px solid #e2e8f0; border-radius: 8px; display: none;"></video>
+              <button type="button" id="startLoginWebcam" class="auth-btn" style="background-color: #64748b;">Start
+                Webcam to Verify Face</button>
+            </div>
+          </div>
+
+          <div id="loginErrorMessage" class="error-message"></div>
+
+          <button type="submit" class="auth-btn">Login</button>
+        </form>
+
+        <p class="auth-footer">
+          Don't have an account?
+          <a href="#" onclick="
+                showSection('landing');
+                return false;
+              ">Create one here</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2026 SecureExam. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#" onclick="
+              scrollToSection('hero');
+              return false;
+            ">Home</a>
+        <a href="#" onclick="
+              scrollToSection('aboutus');
+              return false;
+            ">About</a>
+        <a href="#" onclick="
+              scrollToSection('contact');
+              return false;
+            ">Contact</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let faceModelsLoaded = false;
+    let loginStreamActive = false;
+
+    // Load face-api models
+    Promise.all([
+      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+      faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+    ]).then(() => {
+      faceModelsLoaded = true;
+      console.log("Face measurement models loaded");
+    }).catch(err => {
+      console.error("Failed to load face models", err);
+    });
+
+    const loginVideo = document.getElementById("loginVideo");
+    const startLoginWebcamBtn = document.getElementById("startLoginWebcam");
+
+    startLoginWebcamBtn.addEventListener("click", async () => {
+      if (!faceModelsLoaded) {
+        alert("Face AI models are still loading. Please wait a few seconds.");
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        loginVideo.srcObject = stream;
+        loginVideo.style.display = "block";
+        startLoginWebcamBtn.style.display = "none";
+        loginStreamActive = true;
+      } catch (err) {
+        console.error("Webcam error:", err);
+        alert("Please allow webcam access for face verification.");
+      }
+    });
+
+    // Scroll to section on landing page
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    // Show/Hide sections (for login/registration only)
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll(".section");
+      sections.forEach((section) => section.classList.add("hidden"));
+      document.getElementById(sectionId).classList.remove("hidden");
+      window.scrollTo(0, 0);
+      updateNavigation();
+    }
+
+    // Update navigation based on login status
+    function updateNavigation() {
+      const navLogin = document.getElementById("navLogin");
+      const navLogout = document.getElementById("navLogout");
+      try {
+        fetch("/api/user/status").then(async (response) => {
+          if (!response.ok) {
+            navLogin.style.display = "block";
+            navLogout.style.display = "none";
+            return;
+          }
+
+          const data = await response.json();
+          if (data.authenticated) {
+            navLogin.style.display = "none";
+            navLogout.style.display = "block";
+          } else {
+            navLogin.style.display = "block";
+            navLogout.style.display = "none";
+          }
+        });
+      } catch (error) {
+        navLogin.style.display = "block";
+        navLogout.style.display = "none";
+      }
+    }
+
+    // Set registration type and show registration form
+    function registerType(type) {
+      document.getElementById("userType").value = type;
+      showSection("registration");
+    }
+
+    const registerVideo = document.getElementById("registerVideo");
+    const startRegisterWebcamBtn = document.getElementById("startRegisterWebcam");
+    let registerStreamActive = false;
+
+    startRegisterWebcamBtn.addEventListener("click", async () => {
+      if (!faceModelsLoaded) {
+        alert("Face AI models are still loading. Please wait a few seconds.");
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        registerVideo.srcObject = stream;
+        registerVideo.style.display = "block";
+        startRegisterWebcamBtn.style.display = "none";
+        registerStreamActive = true;
+      } catch (err) {
+        console.error("Webcam error:", err);
+        alert("Please allow webcam access for face verification.");
+      }
+    });
+
+    // Handle Registration
+    document
+      .getElementById("registerForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+        const userType = document.getElementById("userType").value;
+
+        const errorDiv = document.getElementById("registerErrorMessage");
+        const successDiv = document.getElementById("registerSuccessMessage");
+
+        errorDiv.textContent = "";
+        errorDiv.style.display = "none";
+        successDiv.textContent = "";
+        successDiv.style.display = "none";
+
+        if (password !== confirmPassword) {
+          errorDiv.textContent = "Passwords do not match";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        if (password.length < 6) {
+          errorDiv.textContent =
+            "Password must be at least 6 characters long";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        if (!name || !email || !userType) {
+          errorDiv.textContent = "Please complete all required fields";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        if (!registerStreamActive) {
+          errorDiv.textContent = "Face registration is strictly required.";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        successDiv.style.display = "block";
+        successDiv.textContent = "Scanning face... please hold still.";
+
+        const faceVideo = document.getElementById("registerVideo");
+        const detections = await faceapi.detectSingleFace(faceVideo, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.1 })).withFaceLandmarks().withFaceDescriptor();
+
+        if (!detections) {
+          errorDiv.textContent = "Face not detected. Please ensure your face is clearly visible to the camera.";
+          errorDiv.style.display = "block";
+          successDiv.style.display = "none";
+          return;
+        }
+
+        const faceDescriptor = Array.from(detections.descriptor);
+
+        try {
+          // Pass the descriptor encoded in URL parameters, or store in sessionStorage
+          // In this flow it relies on redirecting to register.html
+          // Since index contains the form we will save it in session storage to pass to the OTP page/api later.
+          sessionStorage.setItem('tempFaceDescriptor', JSON.stringify(faceDescriptor));
+
+          successDiv.textContent = "Redirecting to OTP verification...";
+          successDiv.style.display = "block";
+
+          const target = `/register?type=${encodeURIComponent(userType)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+          setTimeout(() => {
+            window.location.href = target;
+          }, 400);
+        } catch (error) {
+          console.error("Error:", error);
+          errorDiv.textContent = "An error occurred. Please try again.";
+          errorDiv.style.display = "block";
+        }
+      });
+
+    // Handle Login
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+        const userType = document.getElementById("loginUserType").value;
+
+        const errorDiv = document.getElementById("loginErrorMessage");
+        errorDiv.textContent = "";
+        errorDiv.style.display = "none";
+
+        if (!loginStreamActive) {
+          errorDiv.textContent = "Face verification is strictly required. Please click 'Start Webcam'.";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        const faceVideo = document.getElementById("loginVideo");
+        const detections = await faceapi.detectSingleFace(faceVideo, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.1 })).withFaceLandmarks().withFaceDescriptor();
+
+        if (!detections) {
+          errorDiv.textContent = "Face not detected. Please try again.";
+          errorDiv.style.display = "block";
+          return;
+        }
+
+        const faceDescriptor = Array.from(detections.descriptor);
+
+        try {
+          const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password, userType, faceDescriptor }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            window.location.href = "/dashboard";
+          } else {
+            errorDiv.textContent = data.message || "Login failed";
+            errorDiv.style.display = "block";
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          errorDiv.textContent = "An error occurred. Please try again.";
+          errorDiv.style.display = "block";
+        }
+      });
+
+    // Logout function
+    function logout() {
+      fetch("/api/logout", {
+        method: "POST",
+      }).then((response) => {
+        if (response.ok) {
+          window.location.href = "/";
+        }
+      });
+    }
+
+    // Dropdown functionality
+    const dropdownContainer = document.querySelector(".dropdown-container");
+    const dropdownToggle = document.querySelector(".dropdown-toggle");
+
+    dropdownToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownContainer.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!dropdownContainer.contains(e.target)) {
+        dropdownContainer.classList.remove("active");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        dropdownContainer.classList.remove("active");
+      }
+    });
+
+    // Handle Contact Form
+    document.getElementById("contactForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const successDiv = document.getElementById("contactSuccessMessage");
+      successDiv.textContent =
+        "Thank you for your message! We will get back to you soon.";
+      successDiv.style.display = "block";
+      document.getElementById("contactForm").reset();
+      setTimeout(() => {
+        successDiv.style.display = "none";
+        showSection("landing");
+      }, 2000);
+    });
+
+    // Check if user is logged in on page load
+    window.addEventListener("load", async () => {
+      updateNavigation();
+    });
+  </script>
+</body>
+
+</html>

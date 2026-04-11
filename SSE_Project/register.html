@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - SecureExam</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo-section">
+        <svg class="logo-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color: #00d9ff; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: #00ffff; stop-opacity: 1" />
+            </linearGradient>
+          </defs>
+          <path d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z" fill="url(#logoGradient)" stroke="white"
+            stroke-width="1" />
+          <path d="M 15 20 L 18 23 L 26 15" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        <a href="/" class="logo-text">SecureExam</a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Registration Section -->
+  <section class="auth-section">
+    <div class="auth-container">
+      <h1>Create Your SecureExam Account</h1>
+      <p class="auth-subtitle">Join our secure exam platform</p>
+
+      <!-- Step 1: Registration Form -->
+      <div id="step1-registration-form" class="registration-step">
+        <h2 class="step-title">Create Your Account</h2>
+        <form id="registerForm" class="auth-form">
+          <!-- User Type Selection -->
+          <div class="form-group">
+            <label for="userType">User Type *</label>
+            <select id="userType" name="userType" required>
+              <option value="">-- Select User Type --</option>
+              <option value="student">Student</option>
+              <option value="faculty">Faculty</option>
+            </select>
+          </div>
+
+          <!-- Full Name Input -->
+          <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required />
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <input type="password" id="password" name="password" placeholder="Create a strong password" required />
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 8px">
+              Minimum 6 characters recommended
+            </p>
+          </div>
+
+          <!-- Confirm Password Input -->
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password *</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password"
+              required />
+          </div>
+
+          <!-- Face Registration -->
+          <div class="form-group">
+            <label>Face Registration (Required for Security) *</label>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <video id="video" width="300" height="225" autoplay muted
+                style="border: 2px solid #e2e8f0; border-radius: 8px; display: none;"></video>
+              <button type="button" id="startWebcam" class="auth-btn" style="background-color: #64748b;">Start Webcam to
+                Register Face</button>
+            </div>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 8px; text-align: center;">Required: Your face is
+              geometrically encrypted for secure login.</p>
+          </div>
+
+          <!-- Error Message -->
+          <div id="step1ErrorMessage" class="error-message"></div>
+
+          <!-- Success Message -->
+          <div id="step1SuccessMessage" class="success-message"></div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="auth-btn">
+            Register & Verify Email
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          Already have an account? <a href="/login">Login here</a>
+        </p>
+      </div>
+
+      <!-- Step 2: OTP Verification -->
+      <div id="step2-otp-verification" class="registration-step" style="display: none">
+        <h2 class="step-title">Verify Your Email</h2>
+        <form id="otpVerificationForm" class="auth-form">
+          <p style="color: #64748b; font-size: 14px; margin-bottom: 20px">
+            A verification code has been sent to
+            <strong id="displayEmail"></strong>
+          </p>
+
+          <div class="form-group">
+            <label for="otp">Enter Verification Code *</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric"
+              required />
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 8px">
+              Check your email inbox for the code (expires in 10 minutes)
+            </p>
+          </div>
+
+          <div id="step2ErrorMessage" class="error-message"></div>
+          <div id="step2SuccessMessage" class="success-message"></div>
+
+          <button type="submit" class="auth-btn">
+            Complete Registration
+          </button>
+
+          <button type="button" id="resendOtpBtn" class="auth-btn" style="background-color: #64748b; margin-top: 10px">
+            Resend Code
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          <a href="#" id="changeEmailBtn" style="color: #0284c7">
+            Go back and change email
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // State management
+    let registrationState = {
+      email: "",
+      userType: "",
+      name: "",
+      password: "",
+      emailVerified: false,
+      faceDescriptor: null,
+    };
+
+    let faceModelsLoaded = false;
+    let streamActive = false;
+    const video = document.getElementById("video");
+    const startWebcamBtn = document.getElementById("startWebcam");
+
+    Promise.all([
+      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+      faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+    ]).then(() => {
+      faceModelsLoaded = true;
+      console.log("Face measurement models loaded");
+    }).catch(err => {
+      console.error("Failed to load face models", err);
+    });
+
+    startWebcamBtn.addEventListener("click", async () => {
+      if (!faceModelsLoaded) {
+        alert("Face AI models are still loading. Please wait a few seconds.");
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = "block";
+        startWebcamBtn.textContent = "Webcam active. Your face will be encrypted and saved during registration.";
+        startWebcamBtn.style.pointerEvents = "none";
+        startWebcamBtn.style.backgroundColor = "#4ade80";
+        streamActive = true;
+      } catch (err) {
+        console.error("Webcam error:", err);
+        alert("Please allow webcam access for face verification.");
+      }
+    });
+
+    // ==================== STEP 1: REGISTRATION FORM ====================
+
+    const registerForm = document.getElementById("registerForm");
+    const step1Error = document.getElementById("step1ErrorMessage");
+    const step1Success = document.getElementById("step1SuccessMessage");
+
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // Get form values
+      const userType = document.getElementById("userType").value;
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+      // Reset messages
+      step1Error.textContent = "";
+      step1Error.style.display = "none";
+      step1Success.textContent = "";
+      step1Success.style.display = "none";
+
+      // Validation
+      if (!userType) {
+        step1Error.textContent = "Please select a user type";
+        step1Error.style.display = "block";
+        return;
+      }
+
+      if (!name) {
+        step1Error.textContent = "Please enter your full name";
+        step1Error.style.display = "block";
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        step1Error.textContent = "Please enter a valid email address";
+        step1Error.style.display = "block";
+        return;
+      }
+
+      if (password.length < 6) {
+        step1Error.textContent =
+          "Password must be at least 6 characters long";
+        step1Error.style.display = "block";
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        step1Error.textContent = "Passwords do not match";
+        step1Error.style.display = "block";
+        return;
+      }
+
+      if (!streamActive || !video.srcObject) {
+        step1Error.textContent = "Please start the webcam to securely register your face.";
+        step1Error.style.display = "block";
+        return;
+      }
+
+      step1Error.textContent = "Scanning face, please hold still...";
+      step1Error.style.display = "block";
+
+      // Min confidence 0.1 handles low quality cameras perfectly
+      const options = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.1, maxResults: 1 });
+      const detection = await faceapi.detectSingleFace(video, options).withFaceLandmarks().withFaceDescriptor();
+
+      if (detection) {
+        registrationState.faceDescriptor = Array.from(detection.descriptor);
+        step1Error.style.display = "none";
+      } else {
+        step1Error.textContent = "Could not clearly detect a face. Move into better lighting and make sure your face is visible.";
+        return;
+      }
+
+      // Store form data in state
+      registrationState.email = email;
+      registrationState.userType = userType;
+      registrationState.name = name;
+      registrationState.password = password;
+
+      // Send OTP to email
+      try {
+        step1Success.textContent = "Sending verification code...";
+        step1Success.style.display = "block";
+
+        const response = await fetch("/api/send-otp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          step1Success.textContent =
+            "✓ Verification code sent to your email!";
+          step1Success.style.display = "block";
+
+          // Move to OTP verification step after 1.5 seconds
+          setTimeout(() => {
+            moveToOTPStep();
+          }, 1500);
+        } else {
+          step1Error.textContent = data.message || "Failed to send OTP";
+          step1Error.style.display = "block";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        step1Error.textContent = "An error occurred. Please try again.";
+        step1Error.style.display = "block";
+      }
+    });
+
+    // ==================== STEP 2: OTP VERIFICATION ====================
+
+    const otpVerificationForm = document.getElementById(
+      "otpVerificationForm",
+    );
+    const step2Error = document.getElementById("step2ErrorMessage");
+    const step2Success = document.getElementById("step2SuccessMessage");
+    const displayEmail = document.getElementById("displayEmail");
+    const resendOtpBtn = document.getElementById("resendOtpBtn");
+    const changeEmailBtn = document.getElementById("changeEmailBtn");
+
+    function moveToOTPStep() {
+      document.getElementById("step1-registration-form").style.display =
+        "none";
+      document.getElementById("step2-otp-verification").style.display =
+        "block";
+      displayEmail.textContent = registrationState.email;
+      document.getElementById("otp").focus();
+    }
+
+    otpVerificationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const otp = document.getElementById("otp").value.trim();
+
+      // Reset messages
+      step2Error.textContent = "";
+      step2Error.style.display = "none";
+      step2Success.textContent = "";
+      step2Success.style.display = "none";
+
+      // Validate OTP format
+      if (otp.length !== 6 || isNaN(otp)) {
+        step2Error.textContent = "Please enter a valid 6-digit code";
+        step2Error.style.display = "block";
+        return;
+      }
+
+      try {
+        step2Success.textContent = "Verifying code...";
+        step2Success.style.display = "block";
+
+        // Step 1: Verify OTP
+        const verifyResponse = await fetch("/api/verify-otp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: registrationState.email,
+            otp,
+          }),
+        });
+
+        const verifyData = await verifyResponse.json();
+
+        if (!verifyResponse.ok) {
+          step2Error.textContent = verifyData.message || "Invalid OTP";
+          step2Error.style.display = "block";
+          step2Success.textContent = "";
+          step2Success.style.display = "none";
+          return;
+        }
+
+        // OTP verified! Now register the user
+        step2Success.textContent =
+          "✓ Email verified! Creating your account...";
+
+        const registerResponse = await fetch("/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: registrationState.email,
+            password: registrationState.password,
+            name: registrationState.name,
+            userType: registrationState.userType,
+            faceDescriptor: registrationState.faceDescriptor,
+          }),
+        });
+
+        const registerData = await registerResponse.json();
+
+        if (registerResponse.ok) {
+          step2Success.textContent =
+            "✓ Account created successfully! Redirecting to login...";
+          step2Success.style.display = "block";
+
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 2000);
+        } else {
+          step2Error.textContent =
+            registerData.message || "Registration failed";
+          step2Error.style.display = "block";
+          step2Success.textContent = "";
+          step2Success.style.display = "none";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        step2Error.textContent = "An error occurred. Please try again.";
+        step2Error.style.display = "block";
+        step2Success.textContent = "";
+        step2Success.style.display = "none";
+      }
+    });
+
+    // Resend OTP function
+    resendOtpBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      step2Error.textContent = "";
+      step2Error.style.display = "none";
+      step2Success.textContent = "";
+      step2Success.style.display = "none";
+
+      try {
+        step2Success.textContent = "Sending new code...";
+        step2Success.style.display = "block";
+
+        const response = await fetch("/api/send-otp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: registrationState.email }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          step2Success.textContent = "✓ New code sent to your email!";
+          step2Success.style.display = "block";
+          document.getElementById("otp").value = "";
+          document.getElementById("otp").focus();
+        } else {
+          step2Error.textContent = data.message || "Failed to resend OTP";
+          step2Error.style.display = "block";
+          step2Success.textContent = "";
+          step2Success.style.display = "none";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        step2Error.textContent = "An error occurred. Please try again.";
+        step2Error.style.display = "block";
+        step2Success.textContent = "";
+        step2Success.style.display = "none";
+      }
+    });
+
+    // Change email function
+    changeEmailBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Reset registration state
+      registrationState = {
+        email: "",
+        userType: "",
+        name: "",
+        password: "",
+        emailVerified: false,
+      };
+
+      // Clear form
+      document.getElementById("userType").value = "";
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("confirmPassword").value = "";
+      document.getElementById("otp").value = "";
+
+      // Reset messages
+      step1Error.textContent = "";
+      step1Error.style.display = "none";
+      step1Success.textContent = "";
+      step1Success.style.display = "none";
+      step2Error.textContent = "";
+      step2Error.style.display = "none";
+      step2Success.textContent = "";
+      step2Success.style.display = "none";
+
+      // Go back to registration form
+      document.getElementById("step1-registration-form").style.display =
+        "block";
+      document.getElementById("step2-otp-verification").style.display =
+        "none";
+
+      document.getElementById("userType").focus();
+    });
+
+    // Get user type from URL parameter (if coming from home page)
+    const urlParams = new URLSearchParams(window.location.search);
+    const userTypeParam = urlParams.get("type");
+    const nameParam = urlParams.get("name");
+    const emailParam = urlParams.get("email");
+
+    if (userTypeParam) {
+      // Pre-select user type if provided
+      document.getElementById("userType").value = userTypeParam;
+    }
+
+    if (nameParam) {
+      document.getElementById("name").value = nameParam;
+    }
+
+    if (emailParam) {
+      document.getElementById("email").value = emailParam;
+    }
+
+    const tempDescriptor = sessionStorage.getItem('tempFaceDescriptor');
+    if (tempDescriptor) {
+      registrationState.faceDescriptor = JSON.parse(tempDescriptor);
+      // Clear it so it is not permanently stored
+      sessionStorage.removeItem('tempFaceDescriptor');
+    }
+  </script>
+</body>
+
+</html>

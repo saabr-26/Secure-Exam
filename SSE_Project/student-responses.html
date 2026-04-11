@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Responses - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .responses-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+
+      .responses-header {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .exam-title {
+        color: #00d9ff;
+        font-size: 1.8rem;
+        margin: 0 0 1rem 0;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .stat-card {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #00d9ff;
+        margin: 0.5rem 0;
+      }
+
+      .stat-label {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+      }
+
+      .filters {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-input,
+      .filter-select {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        padding: 0.75rem;
+        border-radius: 6px;
+        color: #e1e8ef;
+        font-family: inherit;
+      }
+
+      .filter-input::placeholder {
+        color: #7a8289;
+      }
+
+      .filter-input:focus,
+      .filter-select:focus {
+        outline: none;
+        border-color: #00d9ff;
+        background: #0d0f14;
+      }
+
+      .filter-label {
+        color: #a0a9b8;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .responses-list {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .response-card {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .response-card:hover {
+        border-color: #00d9ff;
+        background: #232a3b;
+      }
+
+      .response-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .student-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .student-name {
+        color: #00d9ff;
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .student-email {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+      }
+
+      .score-badge {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #0d0f14;
+        border: 2px solid #00d9ff;
+        border-radius: 8px;
+        padding: 1rem;
+        min-width: 100px;
+      }
+
+      .score-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #00d9ff;
+      }
+
+      .score-label {
+        color: #a0a9b8;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+      }
+
+      .response-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .stat-item {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .stat-item-label {
+        color: #a0a9b8;
+        font-size: 0.85rem;
+      }
+
+      .stat-item-value {
+        color: #e1e8ef;
+        font-weight: 600;
+      }
+
+      .response-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #2d3748;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .submitted-time {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+      }
+
+      .view-btn {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .no-data {
+        text-align: center;
+        color: #a0a9b8;
+        padding: 2rem;
+        font-size: 1.1rem;
+      }
+
+      .back-link {
+        color: #00d9ff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      .question-analysis {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .analysis-title {
+        color: #00d9ff;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .question-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .question-stat {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 6px;
+        padding: 1rem;
+      }
+
+      .question-stat-number {
+        color: #a0a9b8;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .question-stat-value {
+        color: #4caf50;
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      @media (max-width: 768px) {
+        .responses-container {
+          padding: 1rem;
+        }
+
+        .response-header {
+          flex-direction: column;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .filters {
+          flex-direction: column;
+        }
+
+        .filter-input,
+        .filter-select {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/dashboard" class="signin-link">Dashboard</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="responses-container">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+      <div class="responses-header">
+        <h1 class="exam-title" id="examTitle">Exam Title</h1>
+        <p style="color: #a0a9b8; margin: 0">Student Response Analysis</p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Submissions</div>
+            <div class="stat-value" id="totalSubmissions">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Average Score</div>
+            <div class="stat-value" id="averageScore">0%</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Highest Score</div>
+            <div class="stat-value" id="highestScore">0%</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Lowest Score</div>
+            <div class="stat-value" id="lowestScore">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div style="display: flex; align-items: center; gap: 0.5rem">
+          <span class="filter-label">🔍 Search:</span>
+          <input
+            type="text"
+            id="searchInput"
+            class="filter-input"
+            placeholder="Search by student name or email..."
+            style="flex: 1; min-width: 200px"
+          />
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem">
+          <span class="filter-label">📊 Sort:</span>
+          <select id="sortSelect" class="filter-select">
+            <option value="score-desc">Highest Score First</option>
+            <option value="score-asc">Lowest Score First</option>
+            <option value="time-latest">Latest Submission</option>
+            <option value="time-earliest">Earliest Submission</option>
+            <option value="name-asc">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="responses-list" id="responsesList"></div>
+
+      <div class="question-analysis" id="questionAnalysis"></div>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let examId = null;
+      let exam = null;
+      let allResponses = [];
+      let filteredResponses = [];
+
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "faculty") {
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const params = new URLSearchParams(window.location.search);
+          examId = params.get("id");
+
+          if (!examId) {
+            alert("Exam ID not found");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          await loadResponses();
+          setupFilters();
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadResponses() {
+        try {
+          const response = await fetch(`/api/exams/${examId}/responses`);
+          if (!response.ok) {
+            alert("Could not load student responses");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const data = await response.json();
+
+          // The server returns exam info directly, not nested under data.exam
+          exam = {
+            examId: data.examId,
+            examName: data.examName,
+            totalMarks: data.totalMarks || 100,
+            duration: data.duration || 60,
+            totalQuestions: data.totalQuestions || 0,
+            questions: data.questions || [],
+            allowReview: data.allowReview || false,
+          };
+
+          allResponses = data.submissions || [];
+
+          displayResponses();
+          displayStats();
+          displayQuestionAnalysis();
+        } catch (error) {
+          console.error("Error loading responses:", error);
+          alert("Error loading responses");
+          window.location.href = "/dashboard";
+        }
+      }
+
+      function displayStats() {
+        document.getElementById("examTitle").textContent = exam.examName;
+
+        const totalSubmissions = allResponses.length;
+        document.getElementById("totalSubmissions").textContent =
+          totalSubmissions;
+
+        if (totalSubmissions === 0) {
+          document.getElementById("averageScore").textContent = "N/A";
+          document.getElementById("highestScore").textContent = "N/A";
+          document.getElementById("lowestScore").textContent = "N/A";
+          return;
+        }
+
+        const scores = allResponses.map((s) =>
+          Math.round((s.marksObtained / exam.totalMarks) * 100),
+        );
+        const averageScore =
+          Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) + "%";
+        const highestScore = Math.max(...scores) + "%";
+        const lowestScore = Math.min(...scores) + "%";
+
+        document.getElementById("averageScore").textContent = averageScore;
+        document.getElementById("highestScore").textContent = highestScore;
+        document.getElementById("lowestScore").textContent = lowestScore;
+      }
+
+      function displayResponses() {
+        filteredResponses = [...allResponses];
+        renderResponses();
+      }
+
+      function renderResponses() {
+        const responsesList = document.getElementById("responsesList");
+
+        if (filteredResponses.length === 0) {
+          responsesList.innerHTML =
+            '<div class="no-data">No submissions found</div>';
+          return;
+        }
+
+        responsesList.innerHTML = filteredResponses
+          .map((submission) => {
+            const score = Math.round(
+              (submission.marksObtained / exam.totalMarks) * 100,
+            );
+            const student = submission.studentName || "Unknown Student";
+            const studentId = submission.studentId;
+            const submittedDate = new Date(submission.submittedAt);
+            const minutes = Math.floor(submission.timeSpent / 60);
+            const seconds = submission.timeSpent % 60;
+
+            return `
+              <div class="response-card" onclick="viewResponse('${submission.submissionId}')">
+                <div class="response-header">
+                  <div class="student-info">
+                    <div class="student-name">${student} <span style="color: #7a8289; font-size: 0.85rem;">(ID: ${studentId})</span></div>
+                    <div class="student-email">${submittedDate.toLocaleDateString()} at ${submittedDate.toLocaleTimeString()}</div>
+                  </div>
+                  <div class="score-badge">
+                    <div class="score-value">${score}%</div>
+                    <div class="score-label">${submission.marksObtained}/${exam.totalMarks}</div>
+                  </div>
+                </div>
+
+                <div class="response-stats">
+                  <div class="stat-item">
+                    <span class="stat-item-label">✓ Correct:</span>
+                    <span class="stat-item-value">${submission.answers.filter((a) => a.isCorrect).length}/${exam.questions.length}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-item-label">⏱ Time Spent:</span>
+                    <span class="stat-item-value">${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-item-label">📋 Status:</span>
+                    <span class="stat-item-value">Submitted</span>
+                  </div>
+                </div>
+
+                <div class="response-footer">
+                  <span class="submitted-time">${submittedDate.toLocaleString()}</span>
+                  <a href="/view-student-response.html?examId=${examId}&submissionId=${submission.submissionId}" class="view-btn">View Details →</a>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function displayQuestionAnalysis() {
+        if (allResponses.length === 0) return;
+
+        const analysis = exam.questions.map((question, index) => {
+          const correctCount = allResponses.filter(
+            (s) => s.answers[index] && s.answers[index].isCorrect,
+          ).length;
+          const percentage = Math.round(
+            (correctCount / allResponses.length) * 100,
+          );
+
+          return { index, question, correctCount, percentage };
+        });
+
+        const analysisHtml =
+          '<div class="analysis-title">📊 Question-wise Analysis</div>' +
+          '<div class="question-stats">' +
+          analysis
+            .map(
+              (q) =>
+                `
+                <div class="question-stat">
+                  <div class="question-stat-number">Question ${q.index + 1}</div>
+                  <div class="question-stat-value">${q.percentage}%</div>
+                  <div class="stat-label">${q.correctCount}/${allResponses.length} students correct</div>
+                </div>
+              `,
+            )
+            .join("") +
+          "</div>";
+
+        document.getElementById("questionAnalysis").innerHTML = analysisHtml;
+      }
+
+      function setupFilters() {
+        const searchInput = document.getElementById("searchInput");
+        const sortSelect = document.getElementById("sortSelect");
+
+        searchInput.addEventListener("input", applyFilters);
+        sortSelect.addEventListener("change", applyFilters);
+      }
+
+      function applyFilters() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const sortBy = document.getElementById("sortSelect").value;
+
+        // Filter - search by both name and ID
+        filteredResponses = allResponses.filter((s) => {
+          const studentName = (s.studentName || "").toLowerCase();
+          const studentId = (s.studentId || "").toLowerCase();
+          return (
+            studentName.includes(searchTerm) || studentId.includes(searchTerm)
+          );
+        });
+
+        // Sort
+        switch (sortBy) {
+          case "score-desc":
+            filteredResponses.sort(
+              (a, b) =>
+                (b.marksObtained / exam.totalMarks) * 100 -
+                (a.marksObtained / exam.totalMarks) * 100,
+            );
+            break;
+          case "score-asc":
+            filteredResponses.sort(
+              (a, b) =>
+                (a.marksObtained / exam.totalMarks) * 100 -
+                (b.marksObtained / exam.totalMarks) * 100,
+            );
+            break;
+          case "time-latest":
+            filteredResponses.sort(
+              (a, b) => new Date(b.submittedAt) - new Date(a.submittedAt),
+            );
+            break;
+          case "time-earliest":
+            filteredResponses.sort(
+              (a, b) => new Date(a.submittedAt) - new Date(b.submittedAt),
+            );
+            break;
+          case "name-asc":
+            filteredResponses.sort((a, b) =>
+              (a.studentName || a.studentId).localeCompare(
+                b.studentName || b.studentId,
+              ),
+            );
+            break;
+        }
+
+        renderResponses();
+      }
+
+      function viewResponse(submissionId) {
+        // This would open a detailed view of a specific submission
+        window.location.href = `/view-student-response.html?examId=${examId}&submissionId=${submissionId}`;
+      }
+
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        }).then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      checkAuth();
+    </script>
+  </body>
+</html>

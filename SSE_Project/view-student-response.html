@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Response Details - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .response-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+
+      .response-header {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .exam-info h1 {
+        color: #00d9ff;
+        font-size: 1.8rem;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .student-info-section {
+        color: #a0a9b8;
+        font-size: 0.95rem;
+      }
+
+      .student-info-section div {
+        margin: 0.25rem 0;
+      }
+
+      .score-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #0d0f14;
+        border: 2px solid #00d9ff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        min-width: 150px;
+      }
+
+      .score-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #00d9ff;
+        margin: 0.5rem 0;
+      }
+
+      .score-desc {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .metric-card {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #4caf50;
+        margin: 0.5rem 0;
+      }
+
+      .metric-label {
+        color: #a0a9b8;
+        font-size: 0.85rem;
+      }
+
+      .questions-section {
+        margin-top: 2rem;
+      }
+
+      .questions-section h2 {
+        color: #00d9ff;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-card {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .question-number {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        color: #00d9ff;
+        font-weight: 600;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .question-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+
+      .status-correct {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+      }
+
+      .status-incorrect {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+      }
+
+      .status-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+      }
+
+      .marks-display {
+        margin-left: auto;
+        color: #a0a9b8;
+        font-weight: 600;
+      }
+
+      .question-text {
+        color: #e1e8ef;
+        font-size: 1.05rem;
+        margin: 1rem 0;
+        line-height: 1.6;
+      }
+
+      .question-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+
+      .answer-section {
+        background: #0d0f14;
+        border-left: 4px solid #00d9ff;
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+      }
+
+      .answer-label {
+        color: #7a8289;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .answer-text {
+        color: #e1e8ef;
+        word-break: break-word;
+        line-height: 1.5;
+      }
+
+      .correct-answer {
+        border-left-color: #4caf50;
+        background: rgba(76, 175, 80, 0.05);
+      }
+
+      .incorrect-answer {
+        border-left-color: #f44336;
+        background: rgba(244, 67, 54, 0.05);
+      }
+
+      .pending-answer {
+        border-left-color: #ffc107;
+        background: rgba(255, 193, 7, 0.05);
+      }
+
+      .scoring-note {
+        color: #ffc107;
+        padding: 0.75rem;
+        background: rgba(255, 193, 7, 0.1);
+        border-radius: 6px;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+      }
+
+      .manual-grading-section {
+        background: #0d0f14;
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+      }
+
+      .manual-grading-section h3 {
+        color: #ffc107;
+        margin-top: 0;
+      }
+
+      .grading-input-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+
+      .grading-input {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        padding: 0.75rem;
+        border-radius: 6px;
+        color: #e1e8ef;
+        width: 100px;
+      }
+
+      .grading-input:focus {
+        outline: none;
+        border-color: #ffc107;
+        background: #1a1f2e;
+      }
+
+      .grade-btn {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .grade-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .back-link {
+        color: #00d9ff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .response-container {
+          padding: 1rem;
+        }
+
+        .header-top {
+          flex-direction: column;
+        }
+
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+
+        .grading-input-group {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/dashboard" class="signin-link">Dashboard</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="response-container">
+      <a href="javascript:history.back()" class="back-link">← Back</a>
+
+      <div class="response-header">
+        <div class="header-top">
+          <div class="exam-info">
+            <h1 id="examTitle">Exam Title</h1>
+            <div class="student-info-section">
+              <div>
+                <strong>Student:</strong> <span id="studentName">-</span>
+              </div>
+              <div>
+                <strong>Submitted:</strong> <span id="submittedAt">-</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="score-display">
+            <div class="metric-label">Overall Score</div>
+            <div class="score-number" id="scorePercentage">0%</div>
+            <div class="score-desc" id="scoreMarks">0/100</div>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric-card">
+            <div class="metric-label">Correct Answers</div>
+            <div class="metric-value" id="correctCount">0</div>
+            <div class="metric-label" id="totalQuestionsLabel">out of 0</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Time Spent</div>
+            <div class="metric-value" id="timeSpent">00:00</div>
+            <div class="metric-label" id="totalTimeLabel">seconds</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Status</div>
+            <div class="metric-value" style="font-size: 1rem; color: #4caf50">
+              ✓ Submitted
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="questions-section" id="questionsSection"></div>
+
+      <div class="btn-container">
+        <a href="/dashboard" class="btn-primary">Back to Dashboard</a>
+      </div>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let examId = null;
+      let submissionId = null;
+      let submission = null;
+      let exam = null;
+
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "faculty") {
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const params = new URLSearchParams(window.location.search);
+          examId = params.get("examId");
+          submissionId = params.get("submissionId");
+
+          if (!examId || !submissionId) {
+            alert("Missing exam or submission ID");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          await loadSubmissionDetails();
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadSubmissionDetails() {
+        try {
+          const response = await fetch(
+            `/api/exams/${examId}/submission/${submissionId}`,
+          );
+          if (!response.ok) {
+            alert("Submission not found");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const data = await response.json();
+          submission = data.submission;
+          exam = submission.exam;
+
+          renderResponse();
+        } catch (error) {
+          console.error("Error loading submission:", error);
+          alert("Error loading submission details");
+          window.location.href = "/dashboard";
+        }
+      }
+
+      function renderResponse() {
+        // Update header
+        document.getElementById("examTitle").textContent = exam.examName;
+        document.getElementById("studentName").textContent =
+          (submission.studentName || "Unknown") +
+          " (ID: " +
+          (submission.studentId || "N/A") +
+          ")";
+        const submittedDate = new Date(submission.submittedAt);
+        document.getElementById("submittedAt").textContent =
+          submittedDate.toLocaleString();
+
+        // Calculate and display scores
+        const percentage = Math.round(
+          (submission.marksObtained / exam.totalMarks) * 100,
+        );
+        const correctCount = submission.answers.filter(
+          (a) => a.isCorrect,
+        ).length;
+        const timeMinutes = Math.floor(submission.timeSpent / 60);
+        const timeSeconds = submission.timeSpent % 60;
+
+        document.getElementById("scorePercentage").textContent =
+          `${percentage}%`;
+        document.getElementById("scoreMarks").textContent =
+          `${submission.marksObtained}/${exam.totalMarks}`;
+        document.getElementById("correctCount").textContent = correctCount;
+        document.getElementById("totalQuestionsLabel").textContent =
+          `out of ${exam.questions.length}`;
+        document.getElementById("timeSpent").textContent =
+          `${String(timeMinutes).padStart(2, "0")}:${String(timeSeconds).padStart(2, "0")}`;
+        document.getElementById("totalTimeLabel").textContent =
+          `out of ${String(exam.duration).padStart(2, "0")}:00`;
+
+        // Render questions
+        const questionsSection = document.getElementById("questionsSection");
+        questionsSection.innerHTML =
+          `<h2>Student Answers Review</h2>` +
+          submission.answers
+            .map((answer, index) => {
+              const question = exam.questions[index];
+              const isCorrect = answer.isCorrect;
+              const isPending = question.questionType !== "mcq";
+
+              let statusClass = "";
+              let statusText = "";
+              let statusEmoji = "";
+
+              if (isPending) {
+                statusClass = "status-pending";
+                statusText = "Pending Review";
+                statusEmoji = "📋";
+              } else if (isCorrect) {
+                statusClass = "status-correct";
+                statusText = "Correct";
+                statusEmoji = "✓";
+              } else {
+                statusClass = "status-incorrect";
+                statusText = "Incorrect";
+                statusEmoji = "✗";
+              }
+
+              const answerClass = isPending
+                ? "pending-answer"
+                : isCorrect
+                  ? "correct-answer"
+                  : "incorrect-answer";
+
+              return `
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">Q${index + 1}</div>
+                            <div class="question-status ${statusClass}">${statusEmoji} ${statusText}</div>
+                            <div class="marks-display">${answer.marksObtained}/${question.marks} marks</div>
+                        </div>
+
+                        <div class="question-text">${question.questionText}</div>
+                        ${question.imageUrl ? `<img src="${question.imageUrl}" class="question-image" alt="Question image" />` : ""}
+
+                        <div class="answer-section ${answerClass}">
+                            <div class="answer-label">Student's Answer:</div>
+                            <div class="answer-text">${answer.studentAnswer || "<em>Not answered</em>"}</div>
+                        </div>
+
+                        ${
+                          question.questionType === "mcq" && !isCorrect
+                            ? `
+                            <div class="answer-section correct-answer">
+                                <div class="answer-label">Correct Answer:</div>
+                                <div class="answer-text">${answer.correctAnswer}</div>
+                            </div>
+                        `
+                            : ""
+                        }
+
+                        ${
+                          isPending
+                            ? `
+                            <div class="manual-grading-section">
+                                <h3>📝 Manual Grading Required</h3>
+                                <p style="color: #a0a9b8; margin: 0.5rem 0 1rem 0;">
+                                    Enter the marks obtained (out of ${question.marks}):
+                                </p>
+                                <div class="grading-input-group">
+                                    <input type="number" class="grading-input" id="marks_${index}" 
+                                           min="0" max="${question.marks}" 
+                                           value="${answer.marksObtained}" 
+                                           placeholder="Marks">
+                                    <button class="grade-btn" onclick="gradeQuestion(${index}, ${question.marks})">
+                                        Submit Grade
+                                    </button>
+                                </div>
+                            </div>
+                        `
+                            : ""
+                        }
+                    </div>
+                `;
+            })
+            .join("");
+      }
+
+      async function gradeQuestion(questionIndex, maxMarks) {
+        const marksInput = document.getElementById(`marks_${questionIndex}`);
+        const marks = parseInt(marksInput.value);
+
+        if (isNaN(marks) || marks < 0 || marks > maxMarks) {
+          alert(`Please enter a valid number between 0 and ${maxMarks}`);
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `/api/exams/${examId}/submission/${submissionId}/grade`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                questionIndex: questionIndex,
+                marksObtained: marks,
+              }),
+            },
+          );
+
+          if (!response.ok) {
+            alert("Error saving grade");
+            return;
+          }
+
+          alert("Grade submitted successfully");
+          // Reload the page to show updated results
+          location.reload();
+        } catch (error) {
+          console.error("Error grading question:", error);
+          alert("Error submitting grade");
+        }
+      }
+
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        }).then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      checkAuth();
+    </script>
+  </body>
+</html>

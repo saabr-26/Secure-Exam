@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .dashboard-header {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        padding: 2rem 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #0d0f14;
+      }
+
+      .dashboard-header p {
+        font-size: 1rem;
+        opacity: 0.9;
+        color: #0d0f14;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .dashboard-card {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .dashboard-card:hover {
+        border-color: #00d9ff;
+        box-shadow: 0 10px 30px rgba(0, 217, 255, 0.1);
+      }
+
+      .dashboard-card-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .dashboard-card h3 {
+        color: #00d9ff;
+        margin-bottom: 0.5rem;
+      }
+
+      .dashboard-card p {
+        color: #a0a9b8;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .user-info-box {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 400px;
+        margin: 2rem auto;
+        text-align: center;
+      }
+
+      .user-info-box .user-name {
+        font-size: 1.5rem;
+        color: #00d9ff;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .user-info-box .user-role {
+        color: #a0a9b8;
+        font-size: 1rem;
+        background: rgba(0, 217, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        display: inline-block;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .exam-notification {
+        background: rgba(76, 175, 80, 0.2);
+        border-left: 4px solid #4caf50;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+        color: #4caf50;
+      }
+
+      .exam-notification.warning {
+        background: rgba(255, 193, 7, 0.2);
+        border-left-color: #ffc107;
+        color: #ffc107;
+      }
+
+      .my-exams-section {
+        margin-top: 3rem;
+        padding: 2rem;
+        background: #1a1f2e;
+        border-radius: 12px;
+        border: 1px solid #2d3748;
+      }
+
+      .my-exams-section h2 {
+        color: #00d9ff;
+        margin-top: 0;
+      }
+
+      .exams-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .exam-item {
+        background: #0d0f14;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid #2d3748;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .exam-item:hover {
+        border-color: #00d9ff;
+      }
+
+      .exam-item-info h3 {
+        color: #e1e8ef;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .exam-item-info p {
+        color: #a0a9b8;
+        margin: 0;
+        font-size: 0.9rem;
+      }
+
+      .exam-item-btn {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .exam-item-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .exam-item-btn.review-btn {
+        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+      }
+
+      .exam-item-btn.review-btn:hover {
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+      }
+
+      .exam-item-btn.disabled-btn {
+        background: linear-gradient(135deg, #666 0%, #777 100%);
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .exam-item-btn.disabled-btn:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-grid {
+          padding: 1rem;
+        }
+
+        .exam-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li><span id="userName" class="username-display"></span></li>
+          <li><span id="userRole" class="role-display"></span></li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>Welcome to SecureExam</h1>
+      <p id="welcomeMessage"></p>
+    </div>
+
+    <!-- User Info Box -->
+    <div class="user-info-box">
+      <div class="user-name" id="displayName">Loading...</div>
+      <div class="user-role" id="displayRole">Loading...</div>
+    </div>
+
+    <!-- Dashboard Content - Student View -->
+    <div id="studentDashboard" class="dashboard-grid" style="display: none">
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">📝</div>
+        <h3>My Exams</h3>
+        <p>
+          View and take exams that have been assigned to you by your
+          instructors.
+        </p>
+        <button class="btn-primary" onclick="viewMyExams()">
+          View My Exams
+        </button>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">✅</div>
+        <h3>Results</h3>
+        <p>
+          Access your exam results and performance analytics in real-time with
+          detailed insights.
+        </p>
+        <button class="btn-primary" onclick="viewResults()">
+          View Results
+        </button>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">📊</div>
+        <h3>Performance</h3>
+        <p>Track your academic performance and progress over time.</p>
+        <button class="btn-primary" onclick="viewPerformance()">
+          View Performance
+        </button>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">⚙️</div>
+        <h3>Settings</h3>
+        <p>Customize your account settings and preferences.</p>
+        <button class="btn-primary" onclick="openSettings()">
+          Edit Settings
+        </button>
+      </div>
+    </div>
+
+    <!-- Student Exams Section -->
+    <div
+      id="studentExamsSection"
+      class="my-exams-section"
+      style="display: none"
+    >
+      <h2>📋 Your Assigned Exams</h2>
+      <div id="studentExamsContainer" class="exams-list">
+        <p style="color: #a0a9b8">No exams assigned yet.</p>
+      </div>
+    </div>
+
+    <!-- Dashboard Content - Faculty View -->
+    <div id="facultyDashboard" class="dashboard-grid" style="display: none">
+      <div
+        class="dashboard-card"
+        onclick="window.location.href = '/exam-creation.html'"
+      >
+        <div class="dashboard-card-icon">📝</div>
+        <h3>Create Exam</h3>
+        <p>
+          Create and manage online examinations with advanced proctoring
+          features and security measures.
+        </p>
+        <button
+          class="btn-primary"
+          onclick="
+            event.stopPropagation();
+            window.location.href = '/exam-creation.html';
+          "
+        >
+          Create New Exam
+        </button>
+      </div>
+
+      <div
+        class="dashboard-card"
+        onclick="window.location.href = '/manage-exams.html'"
+      >
+        <div class="dashboard-card-icon">📋</div>
+        <h3>Manage Exams</h3>
+        <p>View, edit, and manage all your created exams and their settings.</p>
+        <button
+          class="btn-primary"
+          onclick="
+            event.stopPropagation();
+            window.location.href = '/manage-exams.html';
+          "
+        >
+          Manage Exams
+        </button>
+      </div>
+
+      <div
+        class="dashboard-card"
+        onclick="window.location.href = '/manage-students.html'"
+      >
+        <div class="dashboard-card-icon">👥</div>
+        <h3>Manage Students</h3>
+        <p>View and manage student accounts and add them to exams.</p>
+        <button
+          class="btn-primary"
+          onclick="
+            event.stopPropagation();
+            window.location.href = '/manage-students.html';
+          "
+        >
+          Manage Students
+        </button>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">📊</div>
+        <h3>Analytics & Reports</h3>
+        <p>
+          View comprehensive analytics and reports about exam performance and
+          student progress.
+        </p>
+        <button class="btn-primary" onclick="viewAnalytics()">
+          View Analytics
+        </button>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">✅</div>
+        <h3>Grade Submissions</h3>
+        <p>Review and submit grades for completed exams.</p>
+        <button class="btn-primary" onclick="gradeSubmissions()">
+          Grade Submissions
+        </button>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-card-icon">⚙️</div>
+        <h3>Settings</h3>
+        <p>Customize your account settings and preferences.</p>
+        <button class="btn-primary" onclick="openSettings()">
+          Edit Settings
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let currentUser = null;
+
+      // Check if user is logged in
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/";
+            return;
+          }
+
+          const data = await response.json();
+          const user = data.user;
+          currentUser = user;
+
+          // Display user info
+          document.getElementById("userName").textContent = `👤 ${user.name}`;
+          document.getElementById("userRole").textContent =
+            `(${user.userType.charAt(0).toUpperCase() + user.userType.slice(1)})`;
+          document.getElementById("welcomeMessage").textContent =
+            `You are logged in as ${user.userType}`;
+
+          document.getElementById("displayName").textContent = user.name;
+          document.getElementById("displayRole").textContent =
+            user.userType.charAt(0).toUpperCase() + user.userType.slice(1);
+
+          // Show appropriate dashboard based on role
+          if (user.userType === "student") {
+            document.getElementById("studentDashboard").style.display = "grid";
+            document.getElementById("facultyDashboard").style.display = "none";
+            loadStudentExams();
+          } else if (user.userType === "faculty") {
+            document.getElementById("facultyDashboard").style.display = "grid";
+            document.getElementById("studentDashboard").style.display = "none";
+          }
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/";
+        }
+      }
+
+      // Load exams for student
+      async function loadStudentExams() {
+        try {
+          const response = await fetch("/api/student/my-exams");
+          if (!response.ok) {
+            return;
+          }
+
+          const data = await response.json();
+          const exams = data.exams;
+          const now = new Date();
+          const currentTime =
+            now.getHours().toString().padStart(2, "0") +
+            ":" +
+            now.getMinutes().toString().padStart(2, "0");
+          const currentDate = now.toISOString().split("T")[0];
+
+          if (exams.length > 0) {
+            document.getElementById("studentExamsSection").style.display =
+              "block";
+            const container = document.getElementById("studentExamsContainer");
+
+            container.innerHTML = exams
+              .map((exam) => {
+                // Determine exam status
+                let status = "";
+                let buttonText = "Take Exam →";
+                let buttonClass = "exam-item-btn";
+                let canTakeExam = true;
+                let statusMessage = "";
+
+                // Check if exam is closed
+                if (exam.status === "closed") {
+                  canTakeExam = false;
+                  buttonText = "Review Exam →";
+                  buttonClass = "exam-item-btn review-btn";
+                  status = "📭 Closed";
+                  statusMessage = "Exam has ended";
+                } else if (exam.examDate && currentDate > exam.examDate) {
+                  // Exam date has passed
+                  canTakeExam = false;
+                  buttonText = "Review Exam →";
+                  buttonClass = "exam-item-btn review-btn";
+                  status = "⏳ Ended";
+                  statusMessage = "Exam date has passed";
+                } else if (exam.availableFromTime && exam.availableToTime) {
+                  // Check time window
+                  if (currentTime < exam.availableFromTime) {
+                    canTakeExam = false;
+                    buttonText = "Not Started";
+                    buttonClass = "exam-item-btn disabled-btn";
+                    status = "🔒 Not Started";
+                    statusMessage = `Available from ${exam.availableFromTime}`;
+                  } else if (currentTime > exam.availableToTime) {
+                    canTakeExam = false;
+                    buttonText = "Review Exam →";
+                    buttonClass = "exam-item-btn review-btn";
+                    status = "⏳ Ended";
+                    statusMessage = `Exam ended at ${exam.availableToTime}`;
+                  } else {
+                    status = "🟢 Active";
+                    statusMessage = `Available until ${exam.availableToTime}`;
+                  }
+                } else if (exam.status === "draft") {
+                  canTakeExam = false;
+                  buttonText = "Not Available";
+                  buttonClass = "exam-item-btn disabled-btn";
+                  status = "📋 Draft";
+                  statusMessage = "Exam not yet activated";
+                } else {
+                  status = "🟢 Active";
+                  statusMessage = "Available now";
+                }
+
+                const timeAvailable =
+                  exam.availableFromTime && exam.availableToTime
+                    ? `⏰ Available: ${exam.availableFromTime} - ${exam.availableToTime}`
+                    : "⏰ No time restrictions";
+
+                const examDateDisplay = exam.examDate
+                  ? `📅 Date: ${exam.examDate}`
+                  : "";
+
+                return `
+                    <div class="exam-item">
+                        <div class="exam-item-info">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                              <h3>${exam.examName}</h3>
+                              <span style="font-size: 0.9rem; color: #00d9ff; background: rgba(0,217,255,0.1); padding: 0.25rem 0.75rem; border-radius: 4px;">${status}</span>
+                            </div>
+                            <p>📚 ${exam.questions.length} questions • ${exam.duration} minutes • ${exam.totalMarks} marks</p>
+                            <p style="margin-top: 0.5rem; color: #00d9ff;">${timeAvailable}</p>
+                            ${examDateDisplay ? `<p style="margin-top: 0.25rem; color: #a0a9b8;">${examDateDisplay}</p>` : ""}
+                            <p style="margin-top: 0.5rem; color: #ffc107; font-size: 0.9rem;">${statusMessage}</p>
+                            <p style="margin-top: 0.5rem;">By: ${exam.facultyName}</p>
+                        </div>
+                        <button class="${buttonClass}" onclick="${canTakeExam ? `viewExam('${exam.examId}')` : `viewExamReview('${exam.examId}')`}" ${!canTakeExam && exam.status !== "closed" && !(exam.availableFromTime && exam.availableToTime) ? "disabled" : ""}>${buttonText}</button>
+                    </div>
+                  `;
+              })
+              .join("");
+          } else {
+            document.getElementById("studentExamsSection").style.display =
+              "none";
+          }
+        } catch (error) {
+          console.error("Error loading student exams:", error);
+        }
+      }
+
+      // Student Dashboard Functions
+      function viewMyExams() {
+        const section = document.getElementById("studentExamsSection");
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function viewExam(examId) {
+        window.location.href = `/exam-taking.html?id=${examId}`;
+      }
+
+      function viewExamReview(examId) {
+        window.location.href = `/exam-review.html?id=${examId}&reviewOnly=true`;
+      }
+
+      function viewResults() {
+        alert(
+          "Viewing your results...\nThis feature will be implemented soon.",
+        );
+      }
+
+      function viewPerformance() {
+        alert(
+          "Viewing your performance analytics...\nThis feature will be implemented soon.",
+        );
+      }
+
+      // Faculty Dashboard Functions
+      function viewAnalytics() {
+        alert(
+          "Loading analytics and reports...\nThis feature will be implemented soon.",
+        );
+      }
+
+      function gradeSubmissions() {
+        alert(
+          "Loading grade submissions...\nThis feature will be implemented soon.",
+        );
+      }
+
+      // Common Functions
+      function openSettings() {
+        alert(
+          "Opening account settings...\nThis feature will be implemented soon.",
+        );
+      }
+
+      // Logout functionality
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        })
+          .then((response) => {
+            if (response.ok) {
+              window.location.href = "/";
+            }
+          })
+          .catch((error) => {
+            console.error("Logout error:", error);
+            window.location.href = "/";
+          });
+      }
+
+      // Check authentication on page load
+      checkAuth();
+    </script>
+  </body>
+</html>

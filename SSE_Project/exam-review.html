@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam Review - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .review-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+
+      .result-header {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .exam-title {
+        color: #00d9ff;
+        font-size: 1.8rem;
+        margin: 0 0 1rem 0;
+      }
+
+      .marks-display {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .marks-card {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        padding: 1.5rem;
+      }
+
+      .marks-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #00d9ff;
+        margin: 0.5rem 0;
+      }
+
+      .marks-label {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+      }
+
+      .percentage {
+        color: #4caf50;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+      }
+
+      .percentage.low {
+        color: #f44336;
+      }
+
+      .percentage.medium {
+        color: #ffc107;
+      }
+
+      .submission-details {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-label {
+        color: #7a8289;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .detail-value {
+        color: #e1e8ef;
+        font-weight: 600;
+      }
+
+      .questions-review {
+        margin-top: 2rem;
+      }
+
+      .questions-review h2 {
+        color: #00d9ff;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-review {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .question-number {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        color: #00d9ff;
+        font-weight: 600;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .question-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+
+      .status-correct {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+      }
+
+      .status-incorrect {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+      }
+
+      .status-partial {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+      }
+
+      .status-pending {
+        background: rgba(0, 217, 255, 0.2);
+        color: #00d9ff;
+      }
+
+      .question-text {
+        color: #e1e8ef;
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      .question-marks {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .question-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .answer-review {
+        background: #0d0f14;
+        border-left: 4px solid #00d9ff;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .answer-label {
+        color: #7a8289;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .answer-text {
+        color: #e1e8ef;
+        word-break: break-word;
+      }
+
+      .correct-answer {
+        border-left-color: #4caf50;
+        background: rgba(76, 175, 80, 0.05);
+      }
+
+      .incorrect-answer {
+        border-left-color: #f44336;
+        background: rgba(244, 67, 54, 0.05);
+      }
+
+      .btn-container {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .back-link {
+        color: #00d9ff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .review-container {
+          padding: 1rem;
+        }
+
+        .marks-display {
+          grid-template-columns: 1fr;
+        }
+
+        .submission-details {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/dashboard" class="signin-link">Dashboard</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="review-container">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+      <div class="result-header">
+        <h1 class="exam-title" id="examTitle">Exam Title</h1>
+        <p style="color: #a0a9b8; margin: 0">Exam Submission Review</p>
+      </div>
+
+      <div class="marks-display">
+        <div class="marks-card">
+          <div class="marks-label">Marks Obtained</div>
+          <div class="marks-value" id="marksObtained">0</div>
+          <div class="marks-label" id="totalMarksLabel">out of 100</div>
+        </div>
+
+        <div class="marks-card">
+          <div class="marks-label">Percentage</div>
+          <div class="percentage" id="percentage">0%</div>
+          <div
+            style="color: #a0a9b8; font-size: 0.9rem; margin-top: 0.5rem"
+            id="gradeLabel"
+          >
+            -
+          </div>
+        </div>
+
+        <div class="marks-card">
+          <div class="marks-label">Questions Correct</div>
+          <div class="marks-value" id="questionsCorrect">0</div>
+          <div class="marks-label" id="totalQuestionsLabel">out of 0</div>
+        </div>
+
+        <div class="marks-card">
+          <div class="marks-label">Time Used</div>
+          <div class="marks-value" id="timeUsed">00:00</div>
+          <div class="marks-label" id="totalTimeLabel">out of 00:00</div>
+        </div>
+      </div>
+
+      <div class="submission-details">
+        <div class="detail-item">
+          <span class="detail-label">Submitted At</span>
+          <span class="detail-value" id="submittedAt">-</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Status</span>
+          <span class="detail-value" style="color: #4caf50">Submitted</span>
+        </div>
+      </div>
+
+      <div class="questions-review" id="questionsReview"></div>
+
+      <div class="btn-container">
+        <a href="/dashboard" class="btn-primary">Back to Dashboard</a>
+      </div>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let examId = null;
+      let submission = null;
+      let isReviewOnly = false;
+      let exam = null;
+
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "student") {
+            window.location.href = "/dashboard";
+          }
+
+          const params = new URLSearchParams(window.location.search);
+          examId = params.get("id");
+          isReviewOnly = params.has("reviewOnly");
+
+          if (!examId) {
+            alert("Exam ID not found");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          if (isReviewOnly) {
+            // For review-only mode (closed exam, ended, etc.)
+            await loadExamForReview();
+          } else {
+            // For submission review mode (student's own submitted answers)
+            await loadSubmission();
+          }
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadExamForReview() {
+        try {
+          // Fetch exam details
+          const response = await fetch(`/api/exams/${examId}`);
+          if (!response.ok) {
+            alert("Exam not found");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const data = await response.json();
+          exam = data.exam;
+
+          // Check if review is allowed by faculty
+          if (exam.allowReview === false) {
+            alert("The faculty has disabled the review option for this exam");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          // Try to fetch student's submission if they have one
+          try {
+            const submissionResponse = await fetch(
+              `/api/exams/${examId}/submission`,
+            );
+            if (submissionResponse.ok) {
+              const submissionData = await submissionResponse.json();
+              submission = submissionData.submission;
+              renderReview();
+            } else {
+              // No submission found - show exam-only review (questions without student answers)
+              renderExamReview();
+            }
+          } catch (e) {
+            // No submission - show exam-only review
+            renderExamReview();
+          }
+        } catch (error) {
+          console.error("Error loading exam for review:", error);
+          alert("Error loading exam");
+          window.location.href = "/dashboard";
+        }
+      }
+
+      async function loadSubmission() {
+        try {
+          const response = await fetch(`/api/exams/${examId}/submission`);
+          if (!response.ok) {
+            alert("Submission not found");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const data = await response.json();
+          submission = data.submission;
+
+          // Check if review is allowed
+          if (submission.exam.allowReview === false) {
+            alert("The faculty has disabled the review option for this exam");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          renderReview();
+        } catch (error) {
+          console.error("Error loading submission:", error);
+          alert("Error loading submission");
+        }
+      }
+
+      function renderExamReview() {
+        // For review-only mode when student hasn't submitted
+        // Update header
+        document.getElementById("examTitle").textContent = exam.examName;
+
+        // Hide marks display for exam-only review
+        document.querySelector(".marks-display").style.display = "none";
+        document.querySelector(".submission-details").style.display = "none";
+
+        // Change subtitle to indicate this is exam review only
+        const subtitle = document.querySelector(".result-header p");
+        subtitle.textContent = "Exam Review (No Submission Data)";
+        subtitle.style.color = "#ffc107";
+
+        // Render questions without student answers
+        const reviewContainer = document.getElementById("questionsReview");
+        reviewContainer.innerHTML =
+          `<h2>Exam Questions</h2>` +
+          exam.questions
+            .map((question, index) => {
+              return `
+                    <div class="question-review">
+                        <div class="question-header">
+                            <div class="question-number">Q${index + 1}</div>
+                            <div style="margin-left: auto; color: #a0a9b8;">${question.marks} marks</div>
+                        </div>
+
+                        <div class="question-text">${question.questionText}</div>
+                        ${question.imageUrl ? `<img src="${question.imageUrl}" class="question-image" alt="Question image" />` : ""}
+                        <div class="question-marks">Total Marks: ${question.marks}</div>
+
+                        ${
+                          question.questionType === "mcq"
+                            ? `
+                            <div style="color: #a0a9b8; padding: 0.75rem; background: rgba(0, 217, 255, 0.1); border-radius: 6px;">
+                                <strong>Options:</strong>
+                                <div style="margin-top: 0.5rem;">
+                                  ${question.options.map((opt) => `<div>• ${opt}</div>`).join("")}
+                                </div>
+                            </div>
+                        `
+                            : `
+                            <div style="color: #a0a9b8; padding: 0.75rem; background: rgba(0, 217, 255, 0.1); border-radius: 6px;">
+                                ℹ️ This is a subjective question requiring manual evaluation.
+                            </div>
+                        `
+                        }
+                    </div>
+                `;
+            })
+            .join("");
+      }
+
+      function renderReview() {
+        const exam = submission.exam;
+
+        // Update header
+        document.getElementById("examTitle").textContent = exam.examName;
+
+        // Calculate statistics
+        const marksObtained = submission.marksObtained;
+        const totalMarks = exam.totalMarks;
+        const percentage = Math.round((marksObtained / totalMarks) * 100);
+        const correctAnswers = submission.answers.filter(
+          (a) => a.isCorrect,
+        ).length;
+        const totalQuestions = exam.questions.length;
+        const timeSpent = submission.timeSpent;
+
+        // Update marks display
+        document.getElementById("marksObtained").textContent = marksObtained;
+        document.getElementById("totalMarksLabel").textContent =
+          `out of ${totalMarks}`;
+        document.getElementById("percentage").textContent = `${percentage}%`;
+        document.getElementById("questionsCorrect").textContent =
+          correctAnswers;
+        document.getElementById("totalQuestionsLabel").textContent =
+          `out of ${totalQuestions}`;
+
+        // Update grade
+        let grade = "F";
+        let gradeColor = "#f44336";
+        if (percentage >= 90) {
+          grade = "A";
+          gradeColor = "#4caf50";
+        } else if (percentage >= 80) {
+          grade = "B";
+          gradeColor = "#4caf50";
+        } else if (percentage >= 70) {
+          grade = "C";
+          gradeColor = "#ffc107";
+        } else if (percentage >= 60) {
+          grade = "D";
+          gradeColor = "#ffc107";
+        }
+        document.getElementById("gradeLabel").textContent = `Grade: ${grade}`;
+        document.getElementById("gradeLabel").style.color = gradeColor;
+
+        // Update time
+        const minutes = Math.floor(timeSpent / 60);
+        const seconds = timeSpent % 60;
+        document.getElementById("timeUsed").textContent =
+          `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        document.getElementById("totalTimeLabel").textContent =
+          `out of ${String(exam.duration).padStart(2, "0")}:00`;
+
+        // Update submission date
+        const submittedDate = new Date(submission.submittedAt);
+        document.getElementById("submittedAt").textContent =
+          submittedDate.toLocaleString();
+
+        // Render questions review
+        const reviewContainer = document.getElementById("questionsReview");
+        reviewContainer.innerHTML =
+          `<h2>Question Review</h2>` +
+          submission.answers
+            .map((answer, index) => {
+              const question = exam.questions[index];
+              const isCorrect = answer.isCorrect;
+              const isPending = question.questionType !== "mcq";
+
+              let statusClass = "";
+              let statusText = "";
+              let statusEmoji = "";
+
+              if (isPending) {
+                statusClass = "status-pending";
+                statusText = "Pending Review";
+                statusEmoji = "📋";
+              } else if (isCorrect) {
+                statusClass = "status-correct";
+                statusText = "Correct";
+                statusEmoji = "✓";
+              } else {
+                statusClass = "status-incorrect";
+                statusText = "Incorrect";
+                statusEmoji = "✗";
+              }
+
+              return `
+                    <div class="question-review">
+                        <div class="question-header">
+                            <div class="question-number">Q${index + 1}</div>
+                            <div class="question-status ${statusClass}">${statusEmoji} ${statusText}</div>
+                            <div style="margin-left: auto; color: #a0a9b8;">${answer.marksObtained}/${question.marks} marks</div>
+                        </div>
+
+                        <div class="question-text">${question.questionText}</div>
+                        ${question.imageUrl ? `<img src="${question.imageUrl}" class="question-image" alt="Question image" />` : ""}
+                        <div class="question-marks">Total Marks: ${question.marks}</div>
+
+                        ${
+                          question.questionType === "mcq"
+                            ? `
+                            <div class="answer-review ${isCorrect ? "correct-answer" : "incorrect-answer"}">
+                                <div class="answer-label">Your Answer:</div>
+                                <div class="answer-text">${answer.studentAnswer || "Not answered"}</div>
+                            </div>
+                            ${
+                              !isCorrect
+                                ? `
+                                <div class="answer-review correct-answer">
+                                    <div class="answer-label">Correct Answer:</div>
+                                    <div class="answer-text">${answer.correctAnswer}</div>
+                                </div>
+                            `
+                                : ""
+                            }
+                        `
+                            : `
+                            <div class="answer-review">
+                                <div class="answer-label">Your Answer:</div>
+                                <div class="answer-text">${answer.studentAnswer || "Not answered"}</div>
+                            </div>
+                            <div style="color: #ffc107; padding: 0.75rem; background: rgba(255, 193, 7, 0.1); border-radius: 6px; margin-top: 1rem;">
+                                ⏳ This answer requires manual evaluation by your instructor.
+                            </div>
+                        `
+                        }
+                    </div>
+                `;
+            })
+            .join("");
+      }
+
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        }).then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      checkAuth();
+    </script>
+  </body>
+</html>

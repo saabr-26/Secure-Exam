@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Take Exam - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .exam-interface {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+        margin: 2rem;
+        max-width: 1400px;
+      }
+
+      .exam-content {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 2rem;
+      }
+
+      .exam-sidebar {
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+      }
+
+      .timer-box {
+        background: #1a1f2e;
+        border: 2px solid #00d9ff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .timer-display {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #00d9ff;
+        font-family: "Courier New", monospace;
+        margin: 1rem 0;
+      }
+
+      .timer-display.warning {
+        color: #ffc107;
+      }
+
+      .timer-display.danger {
+        color: #f44336;
+      }
+
+      .timer-label {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+      }
+
+      .questions-nav {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1rem;
+      }
+
+      .questions-nav h4 {
+        color: #00d9ff;
+        margin: 0 0 1rem 0;
+        font-size: 0.95rem;
+      }
+
+      .questions-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+      }
+
+      .question-btn {
+        aspect-ratio: 1;
+        background: #0d0f14;
+        border: 2px solid #2d3748;
+        border-radius: 6px;
+        color: #a0a9b8;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .question-btn:hover {
+        border-color: #00d9ff;
+        color: #00d9ff;
+      }
+
+      .question-btn.active {
+        background: #00d9ff;
+        color: #0d0f14;
+        border-color: #00d9ff;
+      }
+
+      .question-btn.answered {
+        border-color: #4caf50;
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+      }
+
+      .question-card {
+        background: #0d0f14;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .question-number {
+        color: #00d9ff;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .question-text {
+        color: #e1e8ef;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      .question-image {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .question-marks {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .options-container {
+        margin-bottom: 2rem;
+      }
+
+      .option {
+        background: #1a1f2e;
+        border: 2px solid #2d3748;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .option:hover {
+        border-color: #00d9ff;
+      }
+
+      .option input[type="radio"],
+      .option input[type="text"] {
+        margin-right: 1rem;
+      }
+
+      .option.selected {
+        background: rgba(0, 217, 255, 0.2);
+        border-color: #00d9ff;
+      }
+
+      .option-image {
+        max-width: 100px;
+        max-height: 100px;
+        margin-top: 0.5rem;
+        border-radius: 4px;
+      }
+
+      .answer-input {
+        width: 100%;
+        padding: 1rem;
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        color: #e1e8ef;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .answer-input:focus {
+        outline: none;
+        border-color: #00d9ff;
+        box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.1);
+      }
+
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn-nav {
+        padding: 0.75rem 1.5rem;
+        border: 1px solid #00d9ff;
+        background: transparent;
+        color: #00d9ff;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-nav:hover {
+        background: rgba(0, 217, 255, 0.1);
+      }
+
+      .btn-submit {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-left: auto;
+      }
+
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .warning-message {
+        background: rgba(255, 193, 7, 0.2);
+        border: 1px solid #ffc107;
+        color: #ffc107;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .instructions {
+        background: rgba(0, 217, 255, 0.1);
+        border-left: 4px solid #00d9ff;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+        color: #a0a9b8;
+      }
+
+      .submit-btn {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+
+      .submit-btn button {
+        width: 100%;
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .submit-btn button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      @media (max-width: 1024px) {
+        .exam-interface {
+          grid-template-columns: 1fr;
+        }
+
+        .exam-sidebar {
+          position: static;
+        }
+
+        .questions-grid {
+          grid-template-columns: repeat(6, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .questions-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+
+        .exam-interface {
+          margin: 1rem;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li id="examTitle" style="color: #00d9ff; font-weight: 600"></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="exam-interface">
+      <!-- Main Exam Content -->
+      <div class="exam-content">
+        <div class="warning-message" id="timeWarning" style="display: none">
+          ⏱️ You have less than 5 minutes remaining. Please submit your exam.
+        </div>
+
+        <div class="instructions">
+          <strong>Instructions:</strong>
+          <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0">
+            <li>Answer all questions carefully</li>
+            <li>For MCQ questions, select the correct option</li>
+            <li>For short answer/essay, type your response in the text box</li>
+            <li>Your exam will auto-submit when time expires</li>
+            <li>You can navigate between questions using the sidebar</li>
+          </ul>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="controls">
+          <button class="btn-nav" onclick="previousQuestion()">
+            ← Previous
+          </button>
+          <button class="btn-nav" onclick="nextQuestion()">Next →</button>
+          <button class="btn-submit" onclick="openSubmitConfirm()">
+            Submit Exam
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="exam-sidebar">
+        <div class="timer-box">
+          <div class="timer-label">Time Remaining</div>
+          <div class="timer-display" id="timerDisplay">00:00</div>
+          <button
+            class="btn-nav"
+            onclick="openSubmitConfirm()"
+            style="width: 100%; margin-top: 1rem"
+          >
+            Submit Now
+          </button>
+        </div>
+
+        <div class="questions-nav">
+          <h4>Questions (Click to navigate)</h4>
+          <div class="questions-grid" id="questionsGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div
+      id="submitModal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #1a1f2e;
+          padding: 2rem;
+          border-radius: 12px;
+          border: 1px solid #2d3748;
+          max-width: 400px;
+        "
+      >
+        <h2 style="color: #00d9ff; margin-top: 0">Submit Exam?</h2>
+        <p style="color: #a0a9b8">
+          Are you sure you want to submit your exam? You cannot make changes
+          after submission.
+        </p>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem">
+          <button
+            class="btn-nav"
+            onclick="closeSubmitModal()"
+            style="flex: 1; margin: 0"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn-submit"
+            onclick="submitExam()"
+            style="flex: 1; margin: 0"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let examId = null;
+      let exam = null;
+      let currentQuestionIndex = 0;
+      let answers = {};
+      let timeRemainingSeconds = 0;
+      let examStartTime = null;
+      let timerInterval = null;
+      let autoSubmitted = false;
+
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "student") {
+            window.location.href = "/dashboard";
+          }
+
+          const params = new URLSearchParams(window.location.search);
+          examId = params.get("id");
+
+          if (!examId) {
+            alert("Exam ID not found");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          await loadExam();
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadExam() {
+        try {
+          const response = await fetch(`/api/exams/${examId}`);
+          if (!response.ok) {
+            alert("Failed to load exam");
+            window.location.href = "/dashboard";
+            return;
+          }
+
+          const data = await response.json();
+          exam = data.exam;
+
+          // Check exam availability based on time and date
+          const now = new Date();
+          const currentTime =
+            now.getHours().toString().padStart(2, "0") +
+            ":" +
+            now.getMinutes().toString().padStart(2, "0");
+          const currentDate = now.toISOString().split("T")[0];
+
+          if (exam.status === "closed") {
+            alert("This exam has been closed by the faculty");
+            window.location.href = `/exam-review.html?id=${examId}&reviewOnly=true`;
+            return;
+          }
+
+          if (exam.examDate && currentDate > exam.examDate) {
+            alert(
+              "This exam has ended and is no longer available for attempts",
+            );
+            window.location.href = `/exam-review.html?id=${examId}&reviewOnly=true`;
+            return;
+          }
+
+          if (exam.availableFromTime && exam.availableToTime) {
+            if (currentTime < exam.availableFromTime) {
+              alert(
+                `This exam is not available yet. It will be available from ${exam.availableFromTime}`,
+              );
+              window.location.href = "/dashboard";
+              return;
+            }
+            if (currentTime > exam.availableToTime) {
+              alert(
+                `This exam is no longer available. It ended at ${exam.availableToTime}`,
+              );
+              window.location.href = `/exam-review.html?id=${examId}&reviewOnly=true`;
+              return;
+            }
+          }
+
+          // Check if already submitted
+          const checkResponse = await fetch(
+            `/api/exams/${examId}/check-submission`,
+          );
+          const checkData = await checkResponse.json();
+          if (checkData.hasSubmitted) {
+            alert("You have already submitted this exam");
+            window.location.href = `/exam-review.html?id=${examId}`;
+            return;
+          }
+
+          document.getElementById("examTitle").textContent = exam.examName;
+
+          // Initialize answers
+          exam.questions.forEach((q) => {
+            answers[q.questionId] = "";
+          });
+
+          // Set timer
+          timeRemainingSeconds = exam.duration * 60;
+          examStartTime = Date.now();
+          startTimer();
+
+          renderQuestions();
+          renderQuestionNav();
+          showQuestion(0);
+        } catch (error) {
+          console.error("Error loading exam:", error);
+          alert("Error loading exam");
+        }
+      }
+
+      function startTimer() {
+        timerInterval = setInterval(() => {
+          timeRemainingSeconds--;
+          updateTimerDisplay();
+
+          if (timeRemainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            if (!autoSubmitted) {
+              autoSubmitted = true;
+              submitExamAuto();
+            }
+          }
+        }, 1000);
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeRemainingSeconds / 60);
+        const seconds = timeRemainingSeconds % 60;
+        const timerElement = document.getElementById("timerDisplay");
+        timerElement.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+        if (timeRemainingSeconds <= 300) {
+          timerElement.classList.add("warning");
+          document.getElementById("timeWarning").style.display = "block";
+        }
+
+        if (timeRemainingSeconds <= 60) {
+          timerElement.classList.add("danger");
+          timerElement.classList.remove("warning");
+        }
+      }
+
+      function renderQuestions() {
+        const container = document.getElementById("questionsContainer");
+        container.innerHTML = exam.questions
+          .map(
+            (question, index) => `
+                <div class="question-card" id="question-${index}" style="display: none;">
+                    <div class="question-number">Question ${index + 1} of ${exam.questions.length}</div>
+                    <div class="question-text">${question.questionText}</div>
+                    ${question.imageUrl ? `<img src="${question.imageUrl}" class="question-image" alt="Question image" />` : ""}
+                    <div class="question-marks">Marks: ${question.marks}</div>
+
+                    ${
+                      question.questionType === "mcq"
+                        ? `
+                        <div class="options-container">
+                            ${question.options
+                              .map(
+                                (option, optIndex) => `
+                                <label class="option">
+                                    <input type="radio" name="answer-${question.questionId}" value="${option}"
+                                        onchange="selectOption('${question.questionId}', this.value, ${optIndex})"
+                                        ${answers[question.questionId] === option ? "checked" : ""} />
+                                    <span>${option}</span>
+                                    ${
+                                      question.optionImages &&
+                                      question.optionImages[optIndex]
+                                        ? `
+                                        <img src="${question.optionImages[optIndex]}" class="option-image" alt="Option image" />
+                                    `
+                                        : ""
+                                    }
+                                </label>
+                            `,
+                              )
+                              .join("")}
+                        </div>
+                    `
+                        : `
+                        <textarea class="answer-input" placeholder="Type your answer here..."
+                            onchange="updateAnswer('${question.questionId}', this.value)">${answers[question.questionId]}</textarea>
+                    `
+                    }
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      function renderQuestionNav() {
+        const grid = document.getElementById("questionsGrid");
+        grid.innerHTML = exam.questions
+          .map(
+            (q, index) => `
+                <button class="question-btn" id="qbtn-${index}" onclick="showQuestion(${index})">
+                    ${index + 1}
+                </button>
+            `,
+          )
+          .join("");
+      }
+
+      function showQuestion(index) {
+        if (index < 0 || index >= exam.questions.length) return;
+
+        // Hide all questions
+        exam.questions.forEach((_, i) => {
+          document.getElementById(`question-${i}`).style.display = "none";
+        });
+
+        // Show selected question
+        document.getElementById(`question-${index}`).style.display = "block";
+        currentQuestionIndex = index;
+
+        // Restore the answer state for this question from the answers object
+        const question = exam.questions[index];
+        if (question.questionType === "mcq") {
+          const radioInputs = document.querySelectorAll(
+            `input[name="answer-${question.questionId}"]`,
+          );
+          const savedAnswer = answers[question.questionId];
+          radioInputs.forEach((input) => {
+            input.checked = input.value === savedAnswer;
+          });
+        } else {
+          // For text input, restore the value
+          const textarea = document.querySelector(
+            `textarea[onchange*="${question.questionId}"]`,
+          );
+          if (textarea) {
+            textarea.value = answers[question.questionId] || "";
+          }
+        }
+
+        // Update nav buttons
+        document.querySelectorAll(".question-btn").forEach((btn, i) => {
+          btn.classList.remove("active", "answered");
+          if (i === index) btn.classList.add("active");
+          else if (answers[exam.questions[i].questionId])
+            btn.classList.add("answered");
+        });
+      }
+
+      function selectOption(questionId, option, optIndex) {
+        // Store the answer in the answers object
+        answers[questionId] = option;
+
+        const qIndex = exam.questions.findIndex(
+          (q) => q.questionId === questionId,
+        );
+
+        // Mark question as answered in the navigation
+        if (document.getElementById(`qbtn-${qIndex}`)) {
+          document.getElementById(`qbtn-${qIndex}`).classList.add("answered");
+        }
+
+        console.log(`Answer saved for question ${questionId}:`, option);
+        console.log("Current answers object:", answers);
+      }
+
+      function updateAnswer(questionId, value) {
+        answers[questionId] = value;
+        const qIndex = exam.questions.findIndex(
+          (q) => q.questionId === questionId,
+        );
+        if (value.trim()) {
+          document.getElementById(`qbtn-${qIndex}`).classList.add("answered");
+        }
+      }
+
+      function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+          showQuestion(currentQuestionIndex - 1);
+        }
+      }
+
+      function nextQuestion() {
+        if (currentQuestionIndex < exam.questions.length - 1) {
+          showQuestion(currentQuestionIndex + 1);
+        }
+      }
+
+      function openSubmitConfirm() {
+        document.getElementById("submitModal").style.display = "flex";
+      }
+
+      function closeSubmitModal() {
+        document.getElementById("submitModal").style.display = "none";
+      }
+
+      async function submitExam() {
+        clearInterval(timerInterval);
+
+        const timeSpent = exam.duration * 60 - timeRemainingSeconds;
+
+        try {
+          console.log("Submitting exam with answers:", answers);
+          console.log("Time spent:", timeSpent);
+
+          const response = await fetch(`/api/exams/${examId}/submit`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              answers,
+              timeSpent,
+            }),
+          });
+
+          const data = await response.json();
+          console.log("Server response:", data);
+
+          if (!response.ok) {
+            alert(data.message || "Failed to submit exam");
+            // Re-start timer if submission failed
+            startTimer();
+            return;
+          }
+
+          alert("Exam submitted successfully!");
+          closeSubmitModal();
+          // Disable all exam controls
+          document
+            .querySelectorAll(".btn-nav, .btn-submit, .option, .answer-input")
+            .forEach((el) => {
+              el.disabled = true;
+            });
+          // Wait a moment then redirect
+          setTimeout(() => {
+            window.location.href = `/exam-review.html?id=${examId}`;
+          }, 1000);
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred while submitting the exam");
+          // Re-start timer if submission failed
+          startTimer();
+        }
+      }
+
+      async function submitExamAuto() {
+        clearInterval(timerInterval);
+        alert("Time expired! Your exam is being submitted automatically.");
+
+        const timeSpent = exam.duration * 60;
+
+        try {
+          console.log("Auto-submitting exam...");
+          const response = await fetch(`/api/exams/${examId}/submit`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              answers,
+              timeSpent,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            console.error("Auto-submit failed:", data.message);
+            alert(
+              "Error submitting exam: " + (data.message || "Unknown error"),
+            );
+            return;
+          }
+
+          console.log("Auto-submit successful, redirecting...");
+          // Disable all controls
+          document
+            .querySelectorAll(".btn-nav, .btn-submit, .option, .answer-input")
+            .forEach((el) => {
+              el.disabled = true;
+            });
+          // Redirect to results
+          setTimeout(() => {
+            window.location.href = `/exam-review.html?id=${examId}`;
+          }, 1000);
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error submitting exam: " + error.message);
+        }
+      }
+
+      window.addEventListener("beforeunload", (e) => {
+        if (timerInterval) {
+          e.preventDefault();
+          e.returnValue =
+            "Are you sure? Your exam progress will be lost if you leave.";
+        }
+      });
+
+      checkAuth();
+    </script>
+  </body>
+</html>

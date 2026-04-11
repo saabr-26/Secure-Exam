@@ -1,0 +1,135 @@
+{
+  "students": [
+    {
+      "id": "1769074653065",
+      "email": "adarshmight123@gmail.com",
+      "password": "$2a$10$jnVgou0XLjjrcO9f.u18zOC48QbL/bJZ6/Lqwv.mzkcPNE3fgQmqi",
+      "name": "Adarsh Raghuwanshi",
+      "userType": "student",
+      "createdAt": "2026-01-22T09:37:33.065Z"
+    },
+    {
+      "id": "1769074927969",
+      "email": "kapil@gmail.com",
+      "password": "$2a$10$rDwP9CW0r857wBQ3b3p1QOJZ8GUtkXs0Ky0Nw/oPQRLOIzgWH0KtO",
+      "name": "Kapil Swami",
+      "userType": "student",
+      "createdAt": "2026-01-22T09:42:07.969Z"
+    },
+    {
+      "id": "1769076231907",
+      "email": "raghuwanshiadr@gmail.com",
+      "password": "$2a$10$YS3CAVDULUkTtseSFO3TG.HM3FsHf0vjwqNbkUPiSYmlc4dlDJjAm",
+      "name": "Adarsh Raghuwanshi",
+      "userType": "student",
+      "createdAt": "2026-01-22T10:03:51.907Z"
+    },
+    {
+      "id": "1769076436646",
+      "email": "tanveersadioura24bcy25@iiitkottayam.ac.in",
+      "password": "$2a$10$s/f5/XWYcW4WAcGQB7izveITk8jv1dUG16Gz/35kzwnZUY97CLzBe",
+      "name": "Tanveer Singh Sadioura",
+      "userType": "student",
+      "createdAt": "2026-01-22T10:07:16.646Z"
+    },
+    {
+      "id": "1769340657054",
+      "email": "dabbu123@gmail.com",
+      "password": "$2a$10$Yjf.EqfIRASprae4t1KDGeq9ugu7BELkqi1/OBmfdIT10x2aqqkJG",
+      "name": "Dabbu",
+      "userType": "student",
+      "createdAt": "2026-01-25T11:30:57.054Z"
+    }
+  ],
+  "faculty": [
+    {
+      "id": "1769077188150",
+      "email": "itsssbn123@gmail.com",
+      "password": "$2a$10$hHeUjwjJOzbWH8y5XkUY3.0yu8Mun.ZNTS9QchDsSqaMEFE0ZOcK2",
+      "name": "Mohd Sabir",
+      "userType": "faculty",
+      "createdAt": "2026-01-22T10:19:48.150Z"
+    },
+    {
+      "id": "1769339545562",
+      "email": "sabir123@gmail.com",
+      "password": "$2a$10$sHNvqU63n5NytNsfZ2BeB.1Vb27otUXcxffBTWqfHjuOEsIp1088C",
+      "name": "Sabir",
+      "userType": "faculty",
+      "createdAt": "2026-01-25T11:12:25.562Z"
+    }
+  ],
+  "exams": [
+    {
+      "examId": "1769346552994",
+      "examName": "Tutorial Test Computer Network",
+      "examDescription": "this is the first  tutorial of CN",
+      "duration": 30,
+      "totalMarks": 100,
+      "facultyId": "1769339545562",
+      "facultyName": "Sabir",
+      "questions": [
+        {
+          "questionText": "is this your first tutorial?",
+          "questionType": "mcq",
+          "marks": 50,
+          "options": [
+            "yes",
+            "no"
+          ],
+          "correctAnswer": "yes",
+          "imageUrl": ""
+        },
+        {
+          "questionText": "are you ready for exxam?",
+          "questionType": "mcq",
+          "marks": 50,
+          "options": [
+            "no",
+            "yes"
+          ],
+          "correctAnswer": "no",
+          "imageUrl": ""
+        }
+      ],
+      "students": [
+        "1769340657054"
+      ],
+      "submissions": [
+        {
+          "submissionId": "1769346617664",
+          "studentId": "1769340657054",
+          "studentName": "Dabbu",
+          "examId": "1769346552994",
+          "answers": [
+            {
+              "studentAnswer": "yes",
+              "correctAnswer": "yes",
+              "isCorrect": true,
+              "marksObtained": 50,
+              "questionType": "mcq"
+            },
+            {
+              "studentAnswer": "yes",
+              "correctAnswer": "no",
+              "isCorrect": false,
+              "marksObtained": 0,
+              "questionType": "mcq"
+            }
+          ],
+          "marksObtained": 50,
+          "totalMarks": 100,
+          "timeSpent": 12,
+          "submittedAt": "2026-01-25T13:10:17.664Z",
+          "status": "submitted"
+        }
+      ],
+      "availableFromTime": "18:40",
+      "availableToTime": "18:50",
+      "examDate": "2026-01-25",
+      "allowReview": true,
+      "createdAt": "2026-01-25T13:09:12.994Z",
+      "status": "draft"
+    }
+  ]
+}

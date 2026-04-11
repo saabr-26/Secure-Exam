@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Exams - SecureExam</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .manage-exams-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        color: #00d9ff;
+      }
+
+      .page-header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      .btn-create-exam {
+        background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+        color: #0d0f14;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-create-exam:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 217, 255, 0.3);
+      }
+
+      .filters-section {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .filter-group label {
+        color: #a0a9b8;
+        font-weight: 500;
+      }
+
+      .filter-group select {
+        padding: 0.5rem 1rem;
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 6px;
+        color: #a0a9b8;
+        cursor: pointer;
+      }
+
+      .exams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+      }
+
+      .exam-card {
+        background: #1a1f2e;
+        border: 1px solid #2d3748;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .exam-card:hover {
+        border-color: #00d9ff;
+        box-shadow: 0 10px 30px rgba(0, 217, 255, 0.1);
+      }
+
+      .exam-card-header {
+        margin-bottom: 1rem;
+      }
+
+      .exam-title {
+        color: #00d9ff;
+        font-size: 1.2rem;
+        margin: 0 0 0.5rem 0;
+        word-break: break-word;
+      }
+
+      .exam-faculty {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .exam-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin: 1rem 0;
+        padding: 1rem 0;
+        border-top: 1px solid #2d3748;
+        border-bottom: 1px solid #2d3748;
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .info-label {
+        color: #7a8289;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .info-value {
+        color: #e1e8ef;
+        font-weight: 600;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+      }
+
+      .status-draft {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+      }
+
+      .status-active {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+      }
+
+      .status-closed {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+      }
+
+      .exam-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-sm {
+        flex: 1;
+        padding: 0.5rem 0.75rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-width: 80px;
+      }
+
+      .btn-edit {
+        background: rgba(0, 217, 255, 0.2);
+        color: #00d9ff;
+        border: 1px solid #00d9ff;
+      }
+
+      .btn-edit:hover {
+        background: rgba(0, 217, 255, 0.3);
+      }
+
+      .btn-activate {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        border: 1px solid #4caf50;
+      }
+
+      .btn-activate:hover {
+        background: rgba(76, 175, 80, 0.3);
+      }
+
+      .btn-close {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid #ffc107;
+      }
+
+      .btn-close:hover {
+        background: rgba(255, 193, 7, 0.3);
+      }
+
+      .btn-delete {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        border: 1px solid #f44336;
+      }
+
+      .btn-delete:hover {
+        background: rgba(244, 67, 54, 0.3);
+      }
+
+      .btn-students {
+        background: rgba(156, 39, 176, 0.2);
+        color: #9c27b0;
+        border: 1px solid #9c27b0;
+      }
+
+      .btn-students:hover {
+        background: rgba(156, 39, 176, 0.3);
+      }
+
+      .btn-responses {
+        background: rgba(0, 217, 255, 0.2);
+        color: #00d9ff;
+        border: 1px solid #00d9ff;
+      }
+
+      .btn-responses:hover {
+        background: rgba(0, 217, 255, 0.3);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #7a8289;
+      }
+
+      .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .success-message {
+        background: rgba(76, 175, 80, 0.2);
+        color: #4caf50;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      .error-message {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: #1a1f2e;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 1px solid #2d3748;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        color: #00d9ff;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #2d3748;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: #a0a9b8;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .close-btn:hover {
+        color: #00d9ff;
+      }
+
+      .students-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .student-item {
+        background: #0d0f14;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .student-info {
+        flex: 1;
+      }
+
+      .student-name {
+        color: #e1e8ef;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .student-email {
+        color: #a0a9b8;
+        font-size: 0.9rem;
+      }
+
+      .btn-remove-student {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        border: 1px solid #f44336;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+
+      .btn-remove-student:hover {
+        background: rgba(244, 67, 54, 0.3);
+      }
+
+      .back-link {
+        color: #00d9ff;
+        text-decoration: none;
+        margin-bottom: 1rem;
+        display: inline-block;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .exams-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo-section">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="logoGradient"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
+                <stop
+                  offset="0%"
+                  style="stop-color: #00d9ff; stop-opacity: 1"
+                />
+                <stop
+                  offset="100%"
+                  style="stop-color: #00ffff; stop-opacity: 1"
+                />
+              </linearGradient>
+            </defs>
+            <path
+              d="M 20 2 L 8 8 L 8 18 Q 8 30 20 36 Q 32 30 32 18 L 32 8 Z"
+              fill="url(#logoGradient)"
+              stroke="white"
+              stroke-width="1"
+            />
+            <path
+              d="M 15 20 L 18 23 L 26 15"
+              stroke="white"
+              stroke-width="2.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <a href="/" class="logo-text">SecureExam</a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/dashboard" class="signin-link">Dashboard</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="
+                logout();
+                return false;
+              "
+              class="signin-link"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="manage-exams-container">
+      <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+
+      <div class="page-header">
+        <h1>Manage Exams</h1>
+        <button
+          class="btn-create-exam"
+          onclick="window.location.href = '/exam-creation.html'"
+        >
+          + Create New Exam
+        </button>
+      </div>
+
+      <div class="success-message" id="successMessage"></div>
+      <div class="error-message" id="errorMessage"></div>
+
+      <div class="filters-section">
+        <div class="filter-group">
+          <label for="statusFilter">Filter by Status:</label>
+          <select id="statusFilter" onchange="filterExams()">
+            <option value="">All Exams</option>
+            <option value="draft">Draft</option>
+            <option value="active">Active</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="exams-grid" id="examsGrid">
+        <div style="grid-column: 1/-1; text-align: center; color: #7a8289">
+          Loading exams...
+        </div>
+      </div>
+    </div>
+
+    <!-- Students Modal -->
+    <div class="modal" id="studentsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Students in Exam</h2>
+          <button class="close-btn" onclick="closeStudentsModal()">×</button>
+        </div>
+        <div class="students-list" id="studentsList"></div>
+      </div>
+    </div>
+
+    <script>
+      let currentUser = null;
+      let allExams = [];
+
+      // Check authentication
+      async function checkAuth() {
+        try {
+          const response = await fetch("/api/user");
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const data = await response.json();
+          currentUser = data.user;
+
+          if (currentUser.userType !== "faculty") {
+            window.location.href = "/dashboard";
+          }
+
+          loadExams();
+        } catch (error) {
+          console.error("Auth check failed:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      async function loadExams() {
+        try {
+          const response = await fetch("/api/exams/faculty");
+          if (!response.ok) {
+            showError("Failed to load exams");
+            return;
+          }
+
+          const data = await response.json();
+          allExams = data.exams;
+          renderExams(allExams);
+        } catch (error) {
+          console.error("Error loading exams:", error);
+          showError("Error loading exams");
+        }
+      }
+
+      function filterExams() {
+        const status = document.getElementById("statusFilter").value;
+        const filtered = status
+          ? allExams.filter((exam) => exam.status === status)
+          : allExams;
+        renderExams(filtered);
+      }
+
+      function renderExams(exams) {
+        const grid = document.getElementById("examsGrid");
+
+        if (exams.length === 0) {
+          grid.innerHTML = `
+                    <div style="grid-column: 1/-1;">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <h3>No exams found</h3>
+                            <p>Create your first exam to get started</p>
+                            <button class="btn-create-exam" onclick="window.location.href='/exam-creation.html'" style="margin-top: 1rem;">
+                                Create New Exam
+                            </button>
+                        </div>
+                    </div>
+                `;
+          return;
+        }
+
+        grid.innerHTML = exams
+          .map(
+            (exam) => `
+                <div class="exam-card">
+                    <div class="exam-card-header">
+                        <h3 class="exam-title">${exam.examName}</h3>
+                        <p class="exam-faculty">By: ${exam.facultyName}</p>
+                        <span class="status-badge status-${exam.status}">${exam.status.toUpperCase()}</span>
+                    </div>
+
+                    <div class="exam-info">
+                        <div class="info-item">
+                            <span class="info-label">Duration</span>
+                            <span class="info-value">${exam.duration} min</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total Marks</span>
+                            <span class="info-value">${exam.totalMarks}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Questions</span>
+                            <span class="info-value">${exam.questions.length}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Students</span>
+                            <span class="info-value">${exam.students.length}</span>
+                        </div>
+                    </div>
+
+                    <div class="exam-actions">
+                        <button class="btn-sm btn-students" onclick="viewStudents('${exam.examId}')">👥 Students</button>
+                        <button class="btn-sm btn-edit" onclick="editExam('${exam.examId}')">✏️ Edit</button>
+                        <button class="btn-sm btn-responses" onclick="viewResponses('${exam.examId}')">📊 Responses</button>
+                        ${
+                          exam.status === "draft"
+                            ? `
+                            <button class="btn-sm btn-activate" onclick="activateExam('${exam.examId}')">▶️ Activate</button>
+                        `
+                            : ""
+                        }
+                        ${
+                          exam.status === "active"
+                            ? `
+                            <button class="btn-sm btn-close" onclick="closeExam('${exam.examId}')">🔒 Close</button>
+                        `
+                            : ""
+                        }
+                        <button class="btn-sm btn-delete" onclick="deleteExam('${exam.examId}')">🗑️ Delete</button>
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      function editExam(examId) {
+        window.location.href = `/exam-edit.html?id=${examId}`;
+      }
+
+      function activateExam(examId) {
+        if (confirm("Activate this exam? Students will be able to take it.")) {
+          updateExamStatus(examId, "active");
+        }
+      }
+
+      function closeExam(examId) {
+        if (confirm("Close this exam? No more responses will be accepted.")) {
+          updateExamStatus(examId, "closed");
+        }
+      }
+
+      async function updateExamStatus(examId, status) {
+        try {
+          const response = await fetch(`/api/exams/${examId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            showError(data.message || "Failed to update exam");
+            return;
+          }
+
+          showSuccess("Exam updated successfully!");
+          loadExams();
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred");
+        }
+      }
+
+      async function deleteExam(examId) {
+        if (
+          !confirm(
+            "Are you sure you want to delete this exam? This action cannot be undone.",
+          )
+        ) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/exams/${examId}`, {
+            method: "DELETE",
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            showError(data.message || "Failed to delete exam");
+            return;
+          }
+
+          showSuccess("Exam deleted successfully!");
+          loadExams();
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred");
+        }
+      }
+
+      async function viewStudents(examId) {
+        try {
+          const response = await fetch(`/api/exams/${examId}`);
+          if (!response.ok) {
+            showError("Failed to load exam");
+            return;
+          }
+
+          const data = await response.json();
+          const exam = data.exam;
+
+          // Get student details
+          const studentResponse = await fetch("/api/students/all");
+          const studentsData = await studentResponse.json();
+          const allStudents = studentsData.students;
+
+          const examStudents = exam.students
+            .map((id) => allStudents.find((s) => s.id === id))
+            .filter((s) => s);
+
+          const studentsList = document.getElementById("studentsList");
+          if (examStudents.length === 0) {
+            studentsList.innerHTML =
+              '<p style="color: #a0a9b8; text-align: center; padding: 2rem;">No students assigned yet</p>';
+          } else {
+            studentsList.innerHTML = examStudents
+              .map(
+                (student) => `
+                        <div class="student-item">
+                            <div class="student-info">
+                                <div class="student-name">${student.name}</div>
+                                <div class="student-email">${student.email}</div>
+                            </div>
+                            <button class="btn-remove-student" onclick="removeStudent('${exam.examId}', '${student.id}')">Remove</button>
+                        </div>
+                    `,
+              )
+              .join("");
+          }
+
+          document.getElementById("studentsModal").classList.add("show");
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred");
+        }
+      }
+
+      async function removeStudent(examId, studentId) {
+        if (!confirm("Remove this student from the exam?")) {
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `/api/exams/${examId}/remove-student/${studentId}`,
+            {
+              method: "DELETE",
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            showError(data.message || "Failed to remove student");
+            return;
+          }
+
+          showSuccess("Student removed successfully!");
+          viewStudents(examId);
+          loadExams();
+        } catch (error) {
+          console.error("Error:", error);
+          showError("An error occurred");
+        }
+      }
+
+      function closeStudentsModal() {
+        document.getElementById("studentsModal").classList.remove("show");
+      }
+
+      function viewResponses(examId) {
+        window.location.href = `/student-responses.html?id=${examId}`;
+      }
+
+      function showError(message) {
+        const errorEl = document.getElementById("errorMessage");
+        errorEl.textContent = message;
+        errorEl.classList.add("show");
+        setTimeout(() => errorEl.classList.remove("show"), 5000);
+      }
+
+      function showSuccess(message) {
+        const successEl = document.getElementById("successMessage");
+        successEl.textContent = message;
+        successEl.classList.add("show");
+        setTimeout(() => successEl.classList.remove("show"), 5000);
+      }
+
+      function logout() {
+        fetch("/api/logout", {
+          method: "POST",
+        }).then(() => {
+          window.location.href = "/";
+        });
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener("click", function (event) {
+        const modal = document.getElementById("studentsModal");
+        if (event.target === modal) {
+          modal.classList.remove("show");
+        }
+      });
+
+      // Initialize
+      checkAuth();
+    </script>
+  </body>
+</html>
